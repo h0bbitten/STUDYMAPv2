@@ -51,6 +51,9 @@ Logins load_user()
             printf("Error: File not found.\n");
             exit(1);
         }
+
+        //Besked til Jonas:
+        //Tuborg klammer hører til på næste linje
     }else if(y_n == 'N' || y_n == 'n')
     {
         //If the user picks NO, then we need to add a new user to our database(Users.csv)
