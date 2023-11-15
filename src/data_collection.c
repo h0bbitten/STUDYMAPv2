@@ -6,13 +6,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//Defines a struct for user logins consisting of a username and a password
-typedef struct
-{
-    char username[25];
-    char password[25];
-}Logins;
-Logins load_user();
 
 void login()
 {
@@ -31,9 +24,7 @@ Logins load_user()
     char y_n;
     Logins this_user;
 
-    //Lets user decide if they want to log into an existing user
-    printf("Do you want to login to an existing user?\n Y or N\n>");
-    scanf("%c", &y_n);
+    y_n = yes_or_no_input();
 
     //Checks if a Users file exists and creates one if one doesnt exist
     Users = fopen("Users.csv", "r");
@@ -43,7 +34,7 @@ Logins load_user()
     }
 
 
-    if(y_n == 'Y')
+    if(y_n == 'Y' || y_n == 'y')
     {
         //If the user picks YES, we need to check if the username and password corresponds with a user in
         //our database(Users.csv).
@@ -60,7 +51,7 @@ Logins load_user()
             printf("Error: File not found.\n");
             exit(1);
         }
-    }else if(y_n == 'N')
+    }else if(y_n == 'N' || y_n == 'n')
     {
         //If the user picks NO, then we need to add a new user to our database(Users.csv)
 
@@ -84,5 +75,16 @@ Logins load_user()
     }else printf("Invalid input");
 
     return this_user;
+}
+
+char yes_or_no_input()
+{
+    char input;
+    do {
+        printf("Do you want to login to an existing user? y/n >");
+        input = getchar();
+        while(getchar() != '\n');
+    } while (input != 'y' && input != 'n' && input != 'Y' && input != 'N');
+    return input;
 }
 
