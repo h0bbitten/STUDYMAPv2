@@ -35,6 +35,14 @@ Logins load_user()
     printf("Do you want to login to an existing user?\n Y or N\n>");
     scanf("%c", &y_n);
 
+    //Checks if a Users file exists and creates one if one doesnt exist
+    Users = fopen("Users.csv", "r");
+    if(Users == NULL)
+    {
+        Users = fopen("Users.csv", "w");
+    }
+
+
     if(y_n == 'Y')
     {
         //If the user picks YES, we need to check if the username and password corresponds with a user in
