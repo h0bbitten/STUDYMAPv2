@@ -1,10 +1,12 @@
 #include <stdio.h>
-
+#include <stdlib.h>
+#include "data_collection.h"
 
 int main()
 {
     //The program boots and the user is prompted to login with "MY-ID"
     //Load_user(...)
+    login();
 
     //Add_user(...)
     //***OR***
@@ -37,8 +39,4 @@ int main()
 
     //***NO***
     //Saved_results(...)
-/*
-TODO
- Allan!
-*/
 }
