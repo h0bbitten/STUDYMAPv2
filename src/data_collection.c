@@ -94,7 +94,7 @@ Logins load_user()
         }
         fclose(Users);
 
-        if (found_password == true && found_password == false){
+        if (found_username == true && found_password == false){
             printf("Invalid password");
         }
         if (found_username && found_password) {
