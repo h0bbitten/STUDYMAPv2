@@ -1,5 +1,5 @@
-
 #include "data_collection.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,7 +22,6 @@ Logins load_user()
     FILE *Users;
     char y_n;
     Logins this_user;
-
 
     //Checks if a Users file exists and creates one if one doesn't exist
     Users = fopen("Users.csv", "r");
