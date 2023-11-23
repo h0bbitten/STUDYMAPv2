@@ -1,0 +1,2 @@
+# STUDYMAP
+Akinator for uddannelser
