@@ -9,7 +9,9 @@ typedef struct
     char password[PASSWORD_MAX_LENGTH];
 }Logins;
 
+extern Logins current_user;
 
 void login();
 Logins load_user();
 char login_or_signup();
+void clear_terminal();

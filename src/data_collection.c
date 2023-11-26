@@ -5,11 +5,11 @@
 #include <string.h>
 #include <stdbool.h>
 
+Logins current_user;
 
 void login()
 {
     //Creates a user of the type struct Logins and inputs the current user into it
-    Logins current_user;
     current_user = load_user();
     //debug line
     printf("Username: %s, Password:  %s",current_user.username, current_user.password);
