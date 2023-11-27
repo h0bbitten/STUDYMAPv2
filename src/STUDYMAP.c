@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "data_collection.h"
 #include "questionnaire.h"
+#include "Grade Sheet.h"
 
 int main()
 {
@@ -22,7 +23,7 @@ int main()
     //Load_data(...)
 
     /* TODO:
-     *  1. Mockup karakterblad ("CPR-nummer", karakter1...karakter_n, uddannelsested)
+     *  1. Mockup karakterblad ("CPR-nummer",Fag_1...Fag_n, karakter1...karakter_n, uddannelsested)
      *  2. Hvis brugeren ikke har ungdomsuddannelse så lad bruger vælge en
      *
      */

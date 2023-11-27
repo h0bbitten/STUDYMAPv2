@@ -8,7 +8,7 @@
 
 void Questionnaire(){
 
-    //Check if questionaire file exists, if not creates one
+    //Check if questionnaire file exists, if not creates one
 
     FILE *Answers;
 
