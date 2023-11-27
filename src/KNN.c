@@ -23,6 +23,7 @@ double calculateDistance(double *point1, double *point2, int numFeatures) {
 
 
 // Function to find the index of the minimum element in an array
+//arr for array btw
 int findMinIndex(double *arr, int size) {
     int minIndex = 0;
     for (int i = 1; i < size; ++i) {
