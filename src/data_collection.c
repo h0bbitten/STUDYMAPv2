@@ -47,10 +47,29 @@ Logins load_user()
             printf("Error: File not found.\n");
             exit(1);
         }
-        rewind(Users);
 
-        printf("Please enter a username that is no longer than %d characters\n>", USERNAME_MAX_LENGTH);
-        scanf("%s", this_user.username);
+        int usernameExists;
+
+        do {
+            printf("Please enter a username that is no longer than %d characters\n>", USERNAME_MAX_LENGTH);
+            scanf("%s", this_user.username);
+            // ALT FRA LINJE 57 TIL 73 KAN JEG IKKE FÅ TIL AT VIRKE!!!!!!!
+            int c;
+            while ((c = getchar()) != '\n' && c != EOF);
+
+            char line[MAX_LINE_LENGTH];
+            usernameExists = 0;
+            while (fgets(line, sizeof(line), Users) != NULL) {
+                char *existingUsername = strtok(line, ",");
+                if (existingUsername != NULL && strcmp(existingUsername, this_user.username) == 0) {
+                    fclose(Users);
+                    usernameExists = 1;
+                    printf("Username already exists. Please choose a different username.\n");
+                    break;
+                }
+            }
+
+        } while (usernameExists);
 
         printf("Please enter a password that is no longer than %d characters\n>", PASSWORD_MAX_LENGTH);
         scanf("%s", this_user.password);
@@ -64,53 +83,8 @@ Logins load_user()
         return this_user;
 
     }
-
-    do
-    {
-        y_n = login_or_signup();
-
-        if (y_n == 'S' || y_n == 's')
-        {
-            Users = fopen("Users.csv", "a");
-            if (Users == NULL)
-            {
-                printf("Error: File not found.\n");
-                exit(1);
-            }
-
-            bool usernameExists; // (ALLAN) - Jeg ved sgu ikke lige hvor jeg skal oprette den her, men nu ligger den midt i det hele.
-
-            do {
-
-                printf("Please enter a username that is no longer than %d characters\n>", USERNAME_MAX_LENGTH);
-                scanf("%24s", this_user.username);
-
-                // Checks if the username already exists
-                char line[MAX_LINE_LENGTH];
-                usernameExists = false;
-                while (fgets(line, MAX_LINE_LENGTH, Users) != NULL) {
-                    char *existingUsername = strtok(line, ",");
-                    if (existingUsername != NULL && strcmp(existingUsername, this_user.username) == 0) {
-                        fclose(Users);
-                        usernameExists = true;
-                        printf("Username already exists. Please choose a different username.\n");
-                        break;
-                    }
-                }
-            } while (usernameExists);
-
-            printf("Please enter a password that is no longer than %d characters\n>", PASSWORD_MAX_LENGTH);
-            scanf("%24s", this_user.password);
-
-            printf("Please enter your CPR-number\n>");
-            scanf("%9s", this_user.cpr);
-
-            fprintf(Users, "%s,%s,%s\n", this_user.username, this_user.password, this_user.cpr);
-            fclose(Users);
-
-            return this_user;
-        }
-        else if (y_n == 'L' || y_n == 'l')
+    do {
+    if (y_n == 'L' || y_n == 'l')
         {
             printf("Please enter your username\n>");
             scanf(" %s", this_user.username);
