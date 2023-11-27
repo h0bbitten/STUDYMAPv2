@@ -8,7 +8,10 @@ int main()
     //The program boots and the user is prompted to login with "MY-ID"
     //Load_user(...)
     login();
-
+    /* TODO:
+     *  1. Unique username ALLAN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+     *  2. Password hashing (Open SSL)
+    */
     //Add_user(...)
     //***OR***
     //Load_profile(...)
@@ -22,17 +25,21 @@ int main()
     //***YES***
     //The user can now either start a new test or load previous results
     Questionnaire();
+    /* TODO:
+     *  1. Insert/update questions
+     *  2. Questionnaire progress
+     *  3. Dato og navn til questionnaire
+     *
+     *  */
 
-    //Three_dimensional(...)
-    //KNN(...)
-    //SVM(...)
+    //KNN algorithm(...) - SØREN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     //Process_data(...)
     //Plot_educations(...)
     //Plot_result(...)
     //Calculate_distance(...)
 
-    //Display_result(...)
+    //Display_result(...) - Frederik!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     //Change number of recommendations or decide a different action
     //Results(...)
@@ -41,3 +48,6 @@ int main()
     //***NO***
     //Saved_results(...)
 }
+
+
+
