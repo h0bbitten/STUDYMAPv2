@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "data_collection.h"
+#include "questionnaire.h"
 
 int main()
 {
@@ -20,7 +21,7 @@ int main()
     //Is there previously saved results?
     //***YES***
     //The user can now either start a new test or load previous results
-    //Questionnaire(...)
+    Questionnaire();
 
     //Three_dimensional(...)
     //KNN(...)
