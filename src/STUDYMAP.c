@@ -11,6 +11,7 @@ int main()
     /* TODO:
      *  1. Unique username ALLAN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
      *  2. Password hashing (Open SSL)
+     *  3. Tilføj "cpr-nummer" til bruger struct
     */
     //Add_user(...)
     //***OR***
@@ -19,6 +20,12 @@ int main()
     //After getting the user profile, the program will get the education data from a remote database
     //This is simulated by getting data from a csv file
     //Load_data(...)
+
+    /* TODO:
+     *  1. Mockup karakterblad ("CPR-nummer", karakter1...karakter_n, uddannelsested)
+     *  2. Hvis brugeren ikke har ungdomsuddannelse så lad bruger vælge en
+     *
+     */
     //User having a lack of secondary education will return an error and log out the user
 
     //Is there previously saved results?
@@ -26,7 +33,7 @@ int main()
     //The user can now either start a new test or load previous results
     Questionnaire();
     /* TODO:
-     *  1. Insert/update questions
+     *  1. Insert/update questions - Jonas!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
      *  2. Questionnaire progress
      *  3. Dato og navn til questionnaire
      *
