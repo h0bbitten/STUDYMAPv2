@@ -78,8 +78,26 @@ Logins load_user()
                 exit(1);
             }
 
-            printf("Please enter a username that is no longer than %d characters\n>", USERNAME_MAX_LENGTH);
-            scanf("%24s", this_user.username);
+            bool usernameExists; // (ALLAN) - Jeg ved sgu ikke lige hvor jeg skal oprette den her, men nu ligger den midt i det hele.
+
+            do {
+
+                printf("Please enter a username that is no longer than %d characters\n>", USERNAME_MAX_LENGTH);
+                scanf("%24s", this_user.username);
+
+                // Checks if the username already exists
+                char line[MAX_LINE_LENGTH];
+                usernameExists = false;
+                while (fgets(line, MAX_LINE_LENGTH, Users) != NULL) {
+                    char *existingUsername = strtok(line, ",");
+                    if (existingUsername != NULL && strcmp(existingUsername, this_user.username) == 0) {
+                        fclose(Users);
+                        usernameExists = true;
+                        printf("Username already exists. Please choose a different username.\n");
+                        break;
+                    }
+                }
+            } while (usernameExists);
 
             printf("Please enter a password that is no longer than %d characters\n>", PASSWORD_MAX_LENGTH);
             scanf("%24s", this_user.password);
