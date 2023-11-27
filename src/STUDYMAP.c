@@ -43,7 +43,7 @@ int main() {
     //***NO***
     //Saved_results(...)
 
-
+    //KNN part of main
     // Read training data from Answers_test.csv
     int numTrainingSamples, numFeatures;
     double **trainingData = readTrainingData("Answers_test.csv", &numTrainingSamples, &numFeatures);
