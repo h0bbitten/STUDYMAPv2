@@ -44,30 +44,34 @@ int main() {
     //Saved_results(...)
 
     //KNN part of main
+
     // Read training data from Answers_test.csv
     int numTrainingSamples, numFeatures;
     double **trainingData = readTrainingData("Answers_test.csv", &numTrainingSamples, &numFeatures);
 
-    // Read new data for recommendations from Recommendation.csv
-    int numNewSamples, numNewFeatures;
-    double **newData = readTrainingData("Recommendation.csv", &numNewSamples, &numNewFeatures);
+    // Assume newData is a double array representing a new data point from recommendation.csv
+    double newData[numFeatures];
+    // Initialize newData with appropriate values
+    // Call knn to get the classification result
+    // Assuming you have already read trainingData and newData
+    ClassificationResult result = knn(trainingData, newData, numTrainingSamples, numFeatures);
 
-    // Check if the number of features in the new data matches the training data
-    if (numNewFeatures != numFeatures) {
-        fprintf(stderr, "Error: Number of features in the new data does not match the training data.\n");
-        exit(1);
+
+    // Print the top K predicted classes and their nearest neighbors
+    for (int i = 0; i < K; ++i) {
+        // Print the predicted class and its nearest neighbors
+        printf("Predicted Class: %d\n", result.predictedClass);
+        printf("Nearest Neighbors Indices: ");
+        for (int j = 0; j < K; ++j) {
+            printf("%d ", result.nearestNeighborsIndices[j]);
+        }
+        printf("\n");
+
+    // Free allocated memory for training data
+        freeTrainingData(trainingData, numTrainingSamples);
+
+
+        return 0;
+
     }
-
-    // Perform KNN predictions for each set of new data
-    int k = 3;  // Set the number of recommendations you want
-    for (int i = 0; i < numNewSamples; ++i) {
-        int recommendation = knn(trainingData, newData[i], numTrainingSamples, numFeatures);
-        printf("Recommendation %d: %d\n", i + 1, recommendation);
-    }
-
-    // Free allocated memory
-    freeTrainingData(trainingData, numTrainingSamples);
-    freeTrainingData(newData, numNewSamples);
-
-    return 0;
 }

@@ -1,14 +1,19 @@
 // KNN.h
-#include <math.h>
 
-#ifndef STUDYMAP_KNN_H
-#define STUDYMAP_KNN_H
+#ifndef KNN_H
+#define KNN_H
 
-// Declare the functions here
+#define K 3
+
+typedef struct {
+    int predictedClass;
+    int nearestNeighborsIndices[K];
+} ClassificationResult;
+
 double calculateDistance(double *point1, double *point2, int numFeatures);
 int findMinIndex(double *arr, int size);
-int knn(double **trainingData, double *newData, int numTrainingSamples, int numFeatures);
+ClassificationResult knn(double **trainingData, double *newData, int numTrainingSamples, int numFeatures);
 double **readTrainingData(const char *filename, int *numTrainingSamples, int *numFeatures);
 void freeTrainingData(double **trainingData, int numTrainingSamples);
 
-#endif /* STUDYMAP_KNN_H */
+#endif // KNN_H
