@@ -34,7 +34,6 @@ Logins load_user()
     }
     y_n = login_or_signup();
 
-
     if(y_n == 'S' || y_n == 's')
     {
         //If the user sign_up, then we need to add a new user to our database(Users.csv)
@@ -74,6 +73,8 @@ Logins load_user()
 
         } while (usernameExists);
 
+        fclose(Users);
+
         printf("Please enter a password that is no longer than %d characters\n>", PASSWORD_MAX_LENGTH);
         scanf("%s", this_user.password);
 
@@ -95,9 +96,11 @@ Logins load_user()
         return this_user;
 
     }
-    do {
-    if (y_n == 'L' || y_n == 'l')
-        {
+    if (y_n == 'L' || y_n == 'l') {
+        bool found_username = false;
+        bool found_password = false;
+
+        do {
             printf("Please enter your username\n>");
             scanf(" %s", this_user.username);
 
@@ -105,37 +108,33 @@ Logins load_user()
             scanf(" %s", this_user.password);
 
             char line[MAX_LINE_LENGTH];
-            bool found_username = false;
-            bool found_password = false;
 
-            while (fgets(line, MAX_LINE_LENGTH, Users) != NULL)
-            {
+            rewind(Users);
+
+            while (fgets(line, MAX_LINE_LENGTH, Users) != NULL) {
                 char *username = strtok(line, ",");
-                if (username != NULL && strcmp(username, this_user.username) == 0)
-                {
+                if (username != NULL && strcmp(username, this_user.username) == 0) {
                     found_username = true;
                     char *password = strtok(NULL, ",");
-                    if (password != NULL && strcmp(password, this_user.password) == 0)
-                    {
+                    if (password != NULL && strcmp(password, this_user.password) == 0) {
                         found_password = true;
+                        fclose(Users);
                         break;
                     }
                 }
             }
-            fclose(Users);
 
             if (found_username == true && found_password == false) {
                 printf("Invalid password. Please try again.\n");
-            } else if (found_username && found_password) {
+            } else if (found_username == true && found_password == true) {
                 return this_user;
-            } else {
+            }
+            else {
                 printf("Invalid username or password. Please try again.\n");
             }
-        } else {
-            printf("Invalid input. Please enter 'L' for login or 'S' for sign-up.\n");
-        }
-    } while (1); // Loop indtil der er et login der passer
+        } while (1); // Loop indtil der er et login der passer
 
+    }
 }
 char login_or_signup()
 {
