@@ -54,7 +54,7 @@ Logins load_user()
         printf("Please enter a password that is no longer than %d characters\n>", PASSWORD_MAX_LENGTH);
         scanf("%s", this_user.password);
 
-        fprintf(Users, "%s,%s", this_user.username, this_user.password);
+        fprintf(Users, "%s,%s,\n", this_user.username, this_user.password);
         fclose(Users);
 
         return this_user;
