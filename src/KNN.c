@@ -10,7 +10,6 @@
 #define MAX_COLS 10
 #define K 3
 
-
 // Function to calculate Euclidean distance between two data points
 double calculateDistance(double *point1, double *point2, int numFeatures) {
     double distance = 0.0;
@@ -22,7 +21,9 @@ double calculateDistance(double *point1, double *point2, int numFeatures) {
     return sqrt(distance);
 }
 
+
 // Function to find the index of the minimum element in an array
+//arr for array btw
 int findMinIndex(double *arr, int size) {
     int minIndex = 0;
     for (int i = 1; i < size; ++i) {
@@ -34,7 +35,7 @@ int findMinIndex(double *arr, int size) {
 }
 
 // Function to perform KNN classification
-ClassificationResult knn(double **trainingData, double *newData, int numTrainingSamples, int numFeatures) {
+int knn(double **trainingData, double *newData, int numTrainingSamples, int numFeatures) {
     // Calculate distances between newData and all training samples
     double distances[numTrainingSamples];
     for (int i = 0; i < numTrainingSamples; ++i) {
@@ -54,23 +55,42 @@ ClassificationResult knn(double **trainingData, double *newData, int numTraining
         classCounts[i] = 0;
     }
 
-    // Find the class with the maximum count
+    // Print intermediate values for debugging
+    printf("Distances: ");
+    for (int i = 0; i < numTrainingSamples; ++i) {
+        printf("%lf ", distances[i]);
+    }
+    printf("\n");
+
+    printf("Indices: ");
+    for (int i = 0; i < K; ++i) {
+        printf("%d ", indices[i]);
+    }
+    printf("\n");
+
+    printf("Class Labels: ");
+    for (int i = 0; i < numTrainingSamples; ++i) {
+        printf("%d ", (int)trainingData[i][numFeatures] - 1);
+    }
+    printf("\n");
+
+    printf("Class Counts: ");
     for (int i = 0; i < K; ++i) {
         int classIndex = (int)trainingData[indices[i]][numFeatures] - 1; // Subtract 1 from the class label value
         classCounts[classIndex]++;
+        // Print intermediate class counts for debugging
+        printf("%d ", classCounts[classIndex]);
     }
+    printf("\n");
 
+    // Find the class with the maximum count
     int predictedClass = findMinIndex(classCounts, MAX_COLS);
 
-    // Create a ClassificationResult struct to return the result
-    ClassificationResult result;
-    result.predictedClass = predictedClass;
-    for (int i = 0; i < K; ++i) {
-        result.nearestNeighborsIndices[i] = indices[i];
-    }
-
-    return result;
+    return predictedClass;
 }
+
+
+
 
 // Function to read training data from a CSV file
 double **readTrainingData(const char *filename, int *numTrainingSamples, int *numFeatures) {
