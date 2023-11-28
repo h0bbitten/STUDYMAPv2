@@ -9,9 +9,9 @@ int main()
     //Load_user(...)
     login();
     /* TODO:
-     *  1. Unique username ALLAN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+     *  1. Unique username DOOOOOOOOOONE
      *  2. Password hashing (Open SSL)
-     *  3. Tilføj "cpr-nummer" til bruger struct
+     *  3. Tilføj "cpr-nummer" til bruger struct DOOOOOOOOONE
     */
     //Add_user(...)
     //***OR***
