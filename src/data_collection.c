@@ -39,8 +39,8 @@ Logins load_user()
     {
         //If the user sign_up, then we need to add a new user to our database(Users.csv)
 
-        //This opens the csv file Users in the "a" (append) mode
-        Users = fopen("Users.csv", "a");
+        //This opens the csv file Users in the "r" (read) mode
+        Users = fopen("Users.csv", "r");
         //Error case: checks if the file is opened correctly
         if(Users == NULL)
         {
@@ -49,20 +49,23 @@ Logins load_user()
         }
 
         int usernameExists;
-
         do {
             printf("Please enter a username that is no longer than %d characters\n>", USERNAME_MAX_LENGTH);
             scanf("%s", this_user.username);
-            // ALT FRA LINJE 57 TIL 73 KAN JEG IKKE FÅ TIL AT VIRKE!!!!!!!
-            int c;
-            while ((c = getchar()) != '\n' && c != EOF);
 
             char line[MAX_LINE_LENGTH];
             usernameExists = 0;
+
+            // Rewind the file to the beginning
+            rewind(Users);
+
             while (fgets(line, sizeof(line), Users) != NULL) {
-                char *existingUsername = strtok(line, ",");
+                // strtok modifies the input string, so create a copy to avoid side effects
+                char tempLine[MAX_LINE_LENGTH];
+                strcpy(tempLine, line);
+
+                char *existingUsername = strtok(tempLine, ",");
                 if (existingUsername != NULL && strcmp(existingUsername, this_user.username) == 0) {
-                    fclose(Users);
                     usernameExists = 1;
                     printf("Username already exists. Please choose a different username.\n");
                     break;
@@ -76,6 +79,15 @@ Logins load_user()
 
         printf("Please enter your CPR-number\n>");
         scanf("%s", this_user.cpr);
+
+        //This opens the csv file Users in the "a" (append) mode
+        Users = fopen("Users.csv", "a");
+        //Error case: checks if the file is opened correctly
+        if(Users == NULL)
+        {
+            printf("Error: File not found.\n");
+            exit(1);
+        }
 
         fprintf(Users, "%s,%s,%s\n", this_user.username, this_user.password, this_user.cpr);
         fclose(Users);
