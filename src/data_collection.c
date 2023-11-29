@@ -94,8 +94,24 @@ Logins load_user()
         scanf("%s", &hashed_password);
 
         fprintf(Users, "%s,%s,\n", this_user.username, this_user.password);
+
         printf("Please enter your CPR-number\n>");
-        scanf("%s", this_user.cpr);
+        scanf(" %s", this_user.cpr);
+
+
+        do {
+            int length_of_cpr = strlen(this_user.cpr);
+            if(length_of_cpr < CPR_MAX_LENGTH){
+                printf("CPR-number is too short. Please try again.\n");
+                scanf("%s", this_user.cpr);
+            } else if(length_of_cpr > CPR_MAX_LENGTH){
+                printf("CPR-number is too long. Please try again.\n");
+                scanf("%s", this_user.cpr);
+            } else {
+                break;
+            }
+        }while (1);
+
 
         //This opens the csv file Users in the "a" (append) mode
         Users = fopen("Users.csv", "a");
