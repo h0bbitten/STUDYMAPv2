@@ -1,5 +1,6 @@
 
-add_library(data_collection data_collection.c)
+add_library(data_collection data_collection.c
+)
 add_library(questionnaire questionnaire.c)
 
 target_include_directories(data_collection PUBLIC .)
