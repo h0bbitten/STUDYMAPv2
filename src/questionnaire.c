@@ -312,5 +312,3 @@ void get_date(char *formattedDate) {
     // Format the date as "dd-mm-yyyy" and store it in a string
     strftime(formattedDate, 20, "%M-%H-%d-%m-%Y", localTime);
 }
-
-//strncpy(GAME_INFO[i - 1].date, date, sizeof(GAME_INFO[i - 1].date));
