@@ -140,15 +140,17 @@ Logins load_user()
                 }
             }
 
-            if (found_username == true && found_password == false) {
+            if (found_username == false) {
+                printf("Username not found. Please try again.\n");
+            }
+            else if (found_password == false) {
                 printf("Invalid password. Please try again.\n");
-            } else if (found_username == true && found_password == true) {
+            }
+            else{
                 return this_user;
             }
-            else {
-                printf("Invalid username or password. Please try again.\n");
-            }
         } while (1); // Loop indtil der er et login der passer
+
 
     }
 }
