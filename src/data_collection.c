@@ -78,6 +78,7 @@ Logins load_user()
         printf("Please enter a password that is no longer than %d characters\n>", PASSWORD_MAX_LENGTH);
         scanf("%s", this_user.password);
 
+        fprintf(Users, "%s,%s,\n", this_user.username, this_user.password);
         printf("Please enter your CPR-number\n>");
         scanf("%s", this_user.cpr);
 
