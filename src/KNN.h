@@ -4,7 +4,7 @@
 #include <inttypes.h>
 
 #define DATATYPE double
-
+int knn();
 // Structure to represent a sample with its dimensions, group, and temporary distance
 struct Sample {
     DATATYPE *dimensions;
