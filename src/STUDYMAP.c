@@ -56,6 +56,7 @@ int main() {
 
     //***NO***
     //Saved_results(...)
+    knn();
 
 return 0;
 }

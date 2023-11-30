@@ -1,18 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <inttypes.h>
 #include <math.h>
-
+#include "KNN.h"
 
 //
 //You may need to generate the txt files yourself
-//
+//Ref devcoons questionmark?
 
 
 
 #define DATATYPE double
-
+/*
 // Structure to represent a sample with its dimensions, group, and temporary distance
 struct Sample {
     DATATYPE *dimensions;
@@ -28,7 +27,7 @@ struct KnnData {
     uint32_t samples_count[2];
     uint32_t samples_dimensions[8];
 };
-
+*/
 // Function to parse a string into a sample structure
 void parseStringToSample(struct Sample *sample, char *string, uint32_t max_dimensions, uint8_t has_group);
 
@@ -45,7 +44,7 @@ void knnAlgorithm(struct KnnData *knn);
 void sortAscVoters(struct KnnData *knn);
 
 // Main function
-int main() {
+int knn() {
     char input_str[256];
     struct KnnData knn;
 
