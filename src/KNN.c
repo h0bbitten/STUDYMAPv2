@@ -26,7 +26,7 @@ struct KnnData {
     struct Sample **best_voters;
     struct Sample *samples[2];
     uint32_t samples_count[2];
-    uint32_t samples_dimensions[2];
+    uint32_t samples_dimensions[8];
 };
 
 // Function to parse a string into a sample structure
