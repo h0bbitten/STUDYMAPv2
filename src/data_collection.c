@@ -5,25 +5,24 @@
 #include <string.h>
 #include <stdbool.h>
 
+unsigned int hash(const char *str) {
+    unsigned long int value = 0;
+    unsigned int i = 0;
+    unsigned int str_len = strlen(str);
 
-
-Logins current_user;
-
-void hash(char *str, unsigned int *result) {
-    *result = 0;
-
-    while (*str) {
-        *result = (*result << 5) + *str++;
+    for(; i < str_len; i++) {
+        value = value * 9 + str[i];
     }
+    return value;
 }
 
+Logins current_user;
 
 void login()
 {
     //Creates a user of the type struct Logins and inputs the current user into it
     current_user = load_user();
-    unsigned int hashed_password;
-    hash(current_user.password, &hashed_password);
+    unsigned hashed_password = hash(current_user.password);
     //debug line
     printf("Username: %s, Password:  %u, CPR: %s",current_user.username, hashed_password, current_user.cpr);
 }
@@ -88,14 +87,23 @@ Logins load_user()
 
         fclose(Users);
 
-        unsigned int hashed_password;
-
         printf("Please enter a password that is no longer than %d characters\n>", PASSWORD_MAX_LENGTH);
-        scanf("%s", &hashed_password);
+        scanf("%s", current_user.password);
+        unsigned hashed_password = hash(current_user.password);
 
-        fprintf(Users, "%s,%s,\n", this_user.username, this_user.password);
-        printf("Please enter your CPR-number\n>");
-        scanf("%s", this_user.cpr);
+        fprintf(Users, "%s,%u,\n", this_user.username, hashed_password);
+
+        bool correct_cpr = false;
+
+        do {
+            printf("Please enter your CPR-number\n>");
+            scanf(" %s", current_user.cpr);
+            if(strlen(current_user.cpr) != CPR_MAX_LENGTH){
+                printf("The entered CPR-number is not the correct length. Please try again>\n\n");
+            }else {
+                 correct_cpr = true;
+            }
+        } while (correct_cpr == false);
 
         //This opens the csv file Users in the "a" (append) mode
         Users = fopen("Users.csv", "a");
@@ -106,7 +114,7 @@ Logins load_user()
             exit(1);
         }
 
-        fprintf(Users, "%s,%u,%s\n", this_user.username, hashed_password, this_user.cpr);
+        fprintf(Users, "%s,%u,%s\n", this_user.username, hashed_password, current_user.cpr);
         fclose(Users);
 
         return this_user;
@@ -115,14 +123,13 @@ Logins load_user()
     if (y_n == 'L' || y_n == 'l') {
         bool found_username = false;
         bool found_password = false;
-        unsigned int hashed_password;
 
         do {
             printf("Please enter your username\n>");
             scanf(" %s", this_user.username);
 
             printf("Please enter your password\n>");
-            scanf(" %s", &hashed_password);
+            scanf(" %s", current_user.password);
 
             char line[MAX_LINE_LENGTH];
 
@@ -133,7 +140,7 @@ Logins load_user()
                 if (username != NULL && strcmp(username, this_user.username) == 0) {
                     found_username = true;
                     char *password = strtok(NULL, ",");
-                    if (password != NULL && atoi(password) == hashed_password) {
+                    if (password != NULL && strcmp(password, this_user.password) == 0) {
                         found_password = true;
                         fclose(Users);
                         break;
@@ -151,7 +158,6 @@ Logins load_user()
                 return this_user;
             }
         } while (1); // Loop indtil der er et login der passer
-
 
     }
 }
