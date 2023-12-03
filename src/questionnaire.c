@@ -9,21 +9,31 @@
 
 char the_time[30];
 
+char* answers_path;
 
 void Questionnaire(){
+
+    //Create path for answers for current user
+    answers_path = (char*)malloc(PATH_MAX);
+    if (!answers_path) {
+        fprintf(stderr, "Error allocating memory for answers_path.\n");
+    }
+    snprintf(answers_path, PATH_MAX, "Databases/Answers/%s.csv", current_user.username);
+
+
     //Check if questionaire file exists, if not creates one
 
     FILE *Answers;
 
-    Answers = fopen("Answers.csv", "r");
+    Answers = fopen(answers_path, "r");
     if(Answers == NULL)
     {
-        Answers = fopen("Answers.csv", "w");
+        Answers = fopen(answers_path, "w");
     }
     fclose(Answers);
 
     //Looks for existing questionaire for user and checks if they are completed or in progress.
-    Answers = fopen("Answers.csv", "r");
+    Answers = fopen(answers_path, "r");
     int line_number = -1;
     bool in_progress = check_existing_completed(Answers, &line_number);
     fclose(Answers);
@@ -32,16 +42,16 @@ void Questionnaire(){
     if (in_progress == false){
         printf("\nCreating new questionnaire\n");
         // Creates a space in the answer file for current user
-        Answers = fopen("Answers.csv", "a");
+        Answers = fopen(answers_path, "a");
         get_date(the_time);
-        fprintf(Answers, "\n%s,%s,", current_user.username, the_time);
+        fprintf(Answers, "%s,%s,", current_user.username, the_time);
         //Closes the questionaire file
         fclose(Answers);
 
         questions("q_00");
 
         // Marks completed questionaire
-        Answers = fopen("Answers.csv", "a");
+        Answers = fopen(answers_path, "a");
         fprintf(Answers, "done,\n");
         //Closes the questionnaire file
         fclose(Answers);
@@ -55,7 +65,7 @@ void Questionnaire(){
         fclose(Answers);
         update_user_answers(Answers, last_question_id_ptr, line_number);
         // Marks completed questionaire
-        Answers = fopen("Answers.csv", "a");
+        Answers = fopen(answers_path, "a");
         fprintf(Answers, "done,\n");
         //Closes the questionnaire file
         fclose(Answers);
@@ -127,7 +137,7 @@ void question(char *prompt, char *question_id){
 
     //Writes the question into the questionaire file
     FILE *Answer;
-    Answer = fopen("Answers.csv", "a");
+    Answer = fopen(answers_path, "a");
     fprintf(Answer, "%s,%d,", question_id, question_value);
     //Closes the questionaire file
     fclose(Answer);
@@ -195,7 +205,7 @@ bool check_existing_completed(FILE *file, int *line_number) {
 char* get_last_question_id(FILE *file, char *last_question_ID, int Line_number) {
     char buffer[LINE_LENGTH];
 
-    file = fopen("Answers.csv", "r");
+    file = fopen(answers_path, "r");
     if (file == NULL) {
         perror("Error opening file");
         return NULL;
@@ -251,7 +261,7 @@ char* get_last_question_id(FILE *file, char *last_question_ID, int Line_number) 
 
 void update_user_answers(FILE *file, char *last_question_ID, int line_number) {
     // Open file in read mode
-    file = fopen("Answers.csv", "r");
+    file = fopen(answers_path, "r");
 
     // Create temp file to store contents of previous answers
     FILE *temp_file;
@@ -294,8 +304,8 @@ void update_user_answers(FILE *file, char *last_question_ID, int line_number) {
     fclose(file);
     fclose(temp_file);
 
-    remove("Answers.csv");
-    rename("temp.csv", "Answers.csv");
+    remove(answers_path);
+    rename("temp.csv", answers_path);
 
     // contiunes questionaire
     questions(last_question_ID);

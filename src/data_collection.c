@@ -7,6 +7,9 @@
 
 Logins current_user;
 
+//Set path for Users
+char* users_path = {"Databases/Users.csv"};
+
 void login()
 {
     //Creates a user of the type struct Logins and inputs the current user into it
