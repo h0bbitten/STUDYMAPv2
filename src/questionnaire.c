@@ -20,9 +20,10 @@ void Questionnaire(){
     }
     snprintf(answers_path, PATH_MAX, "Databases/Answers/%s.csv", current_user.username);
 
+    //Gets the date and time for the start of the questionnaire
+    get_date(the_time);
 
     //Check if questionaire file exists, if not creates one
-
     FILE *Answers;
 
     Answers = fopen(answers_path, "r");
@@ -43,7 +44,6 @@ void Questionnaire(){
         printf("\nCreating new questionnaire\n");
         // Creates a space in the answer file for current user
         Answers = fopen(answers_path, "a");
-        get_date(the_time);
         fprintf(Answers, "%s,%s,", current_user.username, the_time);
         //Closes the questionaire file
         fclose(Answers);
@@ -58,12 +58,17 @@ void Questionnaire(){
     }
     //If it is in progress then do the questionnaire from where the user left of
     else if (in_progress == true) {
+
         printf("\nUnfinished test found!\nContinuing previous questionnaire\n");
+
         // Get the id of the last question answered
         char last_question_ID[LINE_LENGTH];
         char* last_question_id_ptr = get_last_question_id(Answers, last_question_ID, line_number);
         fclose(Answers);
+
+        //Continue where the questionnaire left off
         update_user_answers(Answers, last_question_id_ptr, line_number);
+
         // Marks completed questionaire
         Answers = fopen(answers_path, "a");
         fprintf(Answers, "done,\n");
@@ -185,12 +190,17 @@ bool check_existing_completed(FILE *file, int *line_number) {
         char *second_last_token = NULL;
 
         if (token != NULL && strcmp(token, current_user.username) == 0) {
-            // Found the previous questionnaire, now check if the last cell is equal to "done"
-            token = strtok(NULL, ",");
+
+            // Found a previous questionnaire, now check if the last cell is equal to "done"
+
             while (token != NULL) {
-                second_last_token = last_token;
                 last_token = token;
+
                 token = strtok(NULL, ",");
+                if (token != NULL){
+                    second_last_token = last_token;
+                    last_token = token;
+                }
             }
 
             if (second_last_token != NULL && strcmp(second_last_token, "done") != 0) {
@@ -274,14 +284,15 @@ void update_user_answers(FILE *file, char *last_question_ID, int line_number) {
 
     char line[LINE_LENGTH];
     char buffer[LINE_LENGTH];
-    int currentLineNumber = 0;
+    char output[LINE_LENGTH];
+    int current_line_number = 0;
 
     // Copy content until the desired line
     while (fgets(line, sizeof(line), file) != NULL) {
-        currentLineNumber++;
+        current_line_number++;
 
         // If it's the desired line, copy it to the buffer and skip writing it to the temp file
-        if (currentLineNumber == line_number) {
+        if (current_line_number == line_number) {
             size_t line_length = strlen(line);
             if (line_length > 0 && line[line_length - 1] == '\n') {
                 // Exclude the newline character
@@ -297,8 +308,31 @@ void update_user_answers(FILE *file, char *last_question_ID, int line_number) {
     }
 
     // If the desired line was found, copy it back to the temp file
-    if (currentLineNumber >= line_number) {
-        fprintf(temp_file, "%s", buffer);
+    if (current_line_number >= line_number) {
+
+
+        //Trow away the first two elements of the line
+        // Use strtok to tokenize the input string
+        char *token = strtok(buffer, ",");
+
+        // Use a loop to skip the first two tokens
+        for (int i = 0; i < 2 && token != NULL; ++i) {
+            token = strtok(NULL, ",");
+        }
+
+        // Now 'token' contains the third element and beyond
+        while (token != NULL) {
+            snprintf(output, sizeof(output), "%s,%s", output, token);
+            token = strtok(NULL, ",");
+        }
+
+/*        // If there are more tokens, append them to the output
+        if (token != NULL) {
+            snprintf(output, sizeof(output), "%s%s", output, token);
+            token = strtok(NULL, ",");
+        }*/
+
+        fprintf(temp_file, "%s,%s%s,",current_user.username, the_time, output);
     }
 
     fclose(file);
@@ -307,7 +341,7 @@ void update_user_answers(FILE *file, char *last_question_ID, int line_number) {
     remove(answers_path);
     rename("temp.csv", answers_path);
 
-    // contiunes questionaire
+    // continues questionnaire
     questions(last_question_ID);
 }
 
@@ -319,6 +353,6 @@ void get_date(char *formattedDate) {
     // Convert the current time to a structure representing local time
     struct tm *localTime = localtime(&currentTime);
 
-    // Format the date as "dd-mm-yyyy" and store it in a string
-    strftime(formattedDate, 20, "%M-%H-%d-%m-%Y", localTime);
+    // Format the date as "SS-MM-HH-dd-mm-yyyy" and store it in a string
+    strftime(formattedDate, 20, "%S-%M-%H-%d-%m-%Y", localTime);
 }
