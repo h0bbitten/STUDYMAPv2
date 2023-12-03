@@ -1,41 +1,57 @@
-#include "data_collection.h"
-#include "Grade Sheet.h"
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 
+// Define a structure to hold user information
+struct User {
+    char cprNumber[11];  // Assuming CPR number is a string with 11 characters
+    char gradeSheet[1000];  // Assuming a string to hold grade sheet
+    char education[50];  // Assuming a string to hold education information
+};
+
+// Function to find a user by CPR number
+bool findUserByCPR(const char *cprNumber, const struct User users[], int numUsers, struct User *resultUser) {
+    for (int i = 0; i < numUsers; ++i) {
+        if (strcmp(users[i].cprNumber, cprNumber) == 0) {
+            *resultUser = users[i];
+            return true;  // User found
+        }
+    }
+    return false;  // User not found
+}
+
 int main() {
-    // Sample data - replace this with your own student information
-    const char *students[] = {"A", "B", "C"};
-    int CPR[] = {1,2,3};
-    int math_grades[] = {02, 02, 02};
-    int english_grades[] = {12, 12, 12};
-    int science_grades[] = {07, 07, 07};
-    int num_students = sizeof(students) / sizeof(students[0]);
+    // Create sample users
+    struct User users[3] = {
+            {"1111111111", "Dansk A, mdt.:07, Dansk A, skr.: 07, Engelsk A, mdt.: 07, Engelsk A, skr.:07, Mat A, mdt.: 07", "STX"},
+            {"2222222222", "Dansk A, mdt.:07, Dansk A, skr.: 07, Engelsk A, mdt.: 07, Engelsk A, skr.:07, Mat A, mdt.: 07", "HTX"},
+            {"3333333333", "Dansk A, mdt.:07, Dansk A, skr.: 07, Engelsk A, mdt.: 07, Engelsk A, skr.:07, Mat A, mdt.: 07",}
+    };
 
-    // Specify the file name
-    const char *csv_file_name = "grade_sheet.csv";
+    // Ask the user to input the CPR number to search for
+    char searchCPR[11];
+    printf("Enter CPR number to search for: ");
+    scanf("%s", searchCPR);
 
-    // Open the file for writing
-    FILE *file = fopen(csv_file_name, "w");
+    struct User foundUser;
 
-    // Check if the file opened successfully
-    if (file == NULL) {
-        fprintf(stderr, "Error opening file: %s\n", csv_file_name);
-        return 1;
+    // Search for a user by CPR number
+    if (findUserByCPR(searchCPR, users, 3, &foundUser)) {
+        printf("User found:\n");
+        printf("CPR Number: %s\n", foundUser.cprNumber);
+        printf("Grade Sheet: %s\n", foundUser.gradeSheet);
+
+        if (strlen(foundUser.education) > 0) {
+            printf("Education: %s\n", foundUser.education);
+        } else {
+            // If education information is not available, ask the user to input it - dette indsætter ikke informationen i CSV filen - midlertidig løsning
+            printf("Education not available. Enter education: ");
+            scanf("%s", foundUser.education);
+            printf("Education: %s\n", foundUser.education);
+        }
+    } else {
+        printf("User with CPR Number %s not found\n", searchCPR);
     }
-
-    // Write the header
-    fprintf(file, "CPR,Name,Math Grade,English Grade,Science Grade\n");
-
-    // Write the student data
-    for (int i = 0; i < num_students; ++i) {
-        fprintf(file, "%d,%s,%d,%d,%d\n", CPR[i], students[i], math_grades[i], english_grades[i], science_grades[i]);
-    }
-
-    // Close the file
-    fclose(file);
 
     return 0;
 }
