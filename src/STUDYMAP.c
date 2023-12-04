@@ -27,7 +27,7 @@ int main() {
      *  2. Hvis brugeren ikke har ungdomsuddannelse så lad bruger vælge en
      *
      */
-    //User having a lack of secondary education will return an error and log out the user
+
 
     //Is there previously saved results?
     //***YES***

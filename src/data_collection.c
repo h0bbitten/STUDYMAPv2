@@ -27,7 +27,7 @@ void login()
     //Creates a user of the type struct Logins and inputs the current user into it
     current_user = load_user();
     unsigned int hashed_password;
-    hash(current_user.password, &hashed_password);
+
     //debug line
     printf("Username: %s, Password:  %u, CPR: %s",current_user.username, hashed_password, current_user.cpr);
 }
@@ -86,6 +86,7 @@ Logins load_user()
                     printf("Username already exists. Please choose a different username.\n");
                     break;
                 }
+
             }
 
         } while (usernameExists);
@@ -95,16 +96,16 @@ Logins load_user()
         unsigned int hashed_password;
 
         printf("Please enter a password that is no longer than %d characters\n>", PASSWORD_MAX_LENGTH);
-        scanf("%s", &hashed_password);
+        scanf("%s", this_user.password);
 
-        fprintf(Users, "%s,%s,\n", this_user.username, this_user.password);
+        //fprintf(Users, "%s,%s,\n", this_user.username, this_user.password);
 
         bool correct_password = false;
         do {
             printf("Please enter your CPR-number\n>");
-            scanf("%s", current_user.cpr);
+            scanf("%s", this_user.cpr);
             
-            if (strlen(current_user.cpr) != CPR_MAX_LENGTH){
+            if (strlen(this_user.cpr) != CPR_MAX_LENGTH){
                 printf("The entered CPR-number is not the correct length. Try again.\n");
             } else {
                 correct_password = true;
@@ -119,6 +120,7 @@ Logins load_user()
             printf("Error: File not found.\n");
             exit(1);
         }
+        hash(this_user.password, &hashed_password);
 
         fprintf(Users, "%s,%u,%s\n", this_user.username, hashed_password, this_user.cpr);
         fclose(Users);
