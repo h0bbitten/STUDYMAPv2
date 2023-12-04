@@ -41,13 +41,13 @@ Logins load_user()
     Logins this_user;
 
     //Checks if a Users file exists and creates one if one doesn't exist
-    Users = fopen("Users.csv", "r");
+    Users = fopen(users_path, "r");
     if(Users == NULL)
     {
-        Users = fopen("Users.csv", "w");
+        Users = fopen(users_path, "w");
         fclose(Users);
 
-        Users = fopen("Users.csv", "r");
+        Users = fopen(users_path, "r");
     }
     y_n = login_or_signup();
 
@@ -56,7 +56,7 @@ Logins load_user()
         //If the user sign_up, then we need to add a new user to our database(Users.csv)
 
         //This opens the csv file Users in the "r" (read) mode
-        Users = fopen("Users.csv", "r");
+        Users = fopen(users_path, "r");
         //Error case: checks if the file is opened correctly
         if(Users == NULL)
         {
@@ -112,7 +112,7 @@ Logins load_user()
         } while(correct_password == false);
 
         //This opens the csv file Users in the "a" (append) mode
-        Users = fopen("Users.csv", "a");
+        Users = fopen(users_path, "a");
         //Error case: checks if the file is opened correctly
         if(Users == NULL)
         {

@@ -11,23 +11,7 @@
 
 
 #define DATATYPE double
-/*
-// Structure to represent a sample with its dimensions, group, and temporary distance
-struct Sample {
-    DATATYPE *dimensions;
-    uint32_t group;
-    DATATYPE tmp_distance;
-};
 
-// Structure to hold k-NN algorithm data, including k, best voters, and sample information
-struct KnnData {
-    uint32_t k;
-    struct Sample **best_voters;
-    struct Sample *samples[2];
-    uint32_t samples_count[2];
-    uint32_t samples_dimensions[8];
-};
-*/
 // Function to parse a string into a sample structure
 void parseStringToSample(struct Sample *sample, char *string, uint32_t max_dimensions, uint8_t has_group);
 

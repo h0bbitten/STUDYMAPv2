@@ -326,12 +326,6 @@ void update_user_answers(FILE *file, char *last_question_ID, int line_number) {
             token = strtok(NULL, ",");
         }
 
-/*        // If there are more tokens, append them to the output
-        if (token != NULL) {
-            snprintf(output, sizeof(output), "%s%s", output, token);
-            token = strtok(NULL, ",");
-        }*/
-
         fprintf(temp_file, "%s,%s%s,",current_user.username, the_time, output);
     }
 
