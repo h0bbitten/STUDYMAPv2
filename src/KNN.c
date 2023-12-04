@@ -4,6 +4,7 @@
 #include <math.h>
 #include <stdint.h>
 
+//ref devcoons, maybe?
 #define DATATYPE double
 
 struct Sample {
