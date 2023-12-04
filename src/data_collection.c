@@ -6,14 +6,13 @@
 #include <stdbool.h>
 
 
-
 Logins current_user;
 
 void hash(char *str, unsigned int *result) {
     *result = 0;
 
     while (*str) {
-        *result = (*result << 5) + *str++;
+        *result = (*result * 5) + *str++;
     }
 }
 
@@ -94,8 +93,18 @@ Logins load_user()
         scanf("%s", &hashed_password);
 
         fprintf(Users, "%s,%s,\n", this_user.username, this_user.password);
-        printf("Please enter your CPR-number\n>");
-        scanf("%s", this_user.cpr);
+
+        bool correct_password = false;
+        do {
+            printf("Please enter your CPR-number\n>");
+            scanf("%s", current_user.cpr);
+            
+            if (strlen(current_user.cpr) != CPR_MAX_LENGTH){
+                printf("The entered CPR-number is not the correct length. Try again.\n");
+            } else {
+                correct_password = true;
+            }
+        } while(correct_password == false);
 
         //This opens the csv file Users in the "a" (append) mode
         Users = fopen("Users.csv", "a");
