@@ -1,8 +1,12 @@
+#include "questionnaire.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include <stdint.h>
+
+char* answers_path;
 
 //ref devcoons, maybe?
 #define DATATYPE double
@@ -39,10 +43,10 @@ int knn() {
     knn.best_voters = (struct Sample **) malloc(knn.k * sizeof(struct Sample *));
 
     // Parse training samples file (Answers.csv)
-    parseFileToSamples(&knn, "Answers.csv");
+    parseFileToSamples(&knn, answers_path);
 
     // Parse uncategorized samples file (datast.csv)
-    parseFileToSamples(&knn, "datast.csv");
+    parseFileToSamples(&knn, "Databases/datast.csv");
 
     // Perform k-NN algorithm
     printf("Perform k-NN algorithm\n");

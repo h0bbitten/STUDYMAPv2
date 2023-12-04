@@ -10,8 +10,6 @@
 
 char the_time[30];
 
-char* answers_path;
-
 void Questionnaire(){
 
     //Create path for answers for current user

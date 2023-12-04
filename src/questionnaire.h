@@ -4,6 +4,7 @@
 #define MAX_CHARACTERS 100
 #define LINE_LENGTH 256
 
+extern char* answers_path;
 
 void Questionnaire();
 void questions(char* last_question_id);
