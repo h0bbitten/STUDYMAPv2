@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include "data_collection.h"
 #include "questionnaire.h"
+#include "KNN.h"
+#include <math.h>
 
-int main()
-{
-
+int main() {
     //The program boots and the user is prompted to login with "MY-ID"
     //Load_user(...)
     login();
@@ -55,7 +55,12 @@ int main()
 
     //***NO***
     //Saved_results(...)
+    knn();
+
+return 0;
 }
+
+
 
 
 
