@@ -100,7 +100,7 @@ Logins load_user()
 
         //fprintf(Users, "%s,%s,\n", this_user.username, this_user.password);
 
-        bool correct_password = false;
+        bool correct_cpr = false;
         do {
             printf("Please enter your CPR-number\n>");
             scanf("%s", this_user.cpr);
@@ -108,9 +108,9 @@ Logins load_user()
             if (strlen(this_user.cpr) != CPR_MAX_LENGTH){
                 printf("The entered CPR-number is not the correct length. Try again.\n");
             } else {
-                correct_password = true;
+                correct_cpr = true;
             }
-        } while(correct_password == false);
+        } while(correct_cpr == false);
 
         //This opens the csv file Users in the "a" (append) mode
         Users = fopen(users_path, "a");
@@ -138,8 +138,8 @@ Logins load_user()
             scanf(" %s", this_user.username);
 
             printf("Please enter your password\n>");
-            scanf(" %s", &hashed_password);
-
+            scanf(" %s", this_user.password);
+            hash(this_user.password, &hashed_password);
             char line[MAX_LINE_LENGTH];
 
             rewind(Users);
