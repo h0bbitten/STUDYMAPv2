@@ -2,94 +2,97 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include "KNN.h"
+#include <stdint.h>
 
-//
-//You may need to generate the txt files yourself
-//Ref devcoons questionmark?
-
-
-
+//ref devcoons, maybe?
 #define DATATYPE double
 
+struct Sample {
+    DATATYPE *dimensions;
+    uint32_t group;
+    DATATYPE tmp_distance;
+};
+
+struct KnnData {
+    uint32_t k;
+    struct Sample **best_voters;
+    struct Sample *samples[2];
+    uint32_t samples_count[2];
+    uint32_t samples_dimensions[9];
+};
 // Function to parse a string into a sample structure
 void parseStringToSample(struct Sample *sample, char *string, uint32_t max_dimensions, uint8_t has_group);
 
-// Function to parse samples from a file into the KnnData structure
+void parseStringToSample(struct Sample *sample, char *string, uint32_t max_dimensions, uint8_t has_group);
 void parseFileToSamples(struct KnnData *knn, char *filepath);
-
-// Function to parse samples from the KnnData structure into a file (placeholder)
 void parseSamplesToFile(struct KnnData *knn, char *filepath);
-
-// Function to perform the k-NN algorithm
 void knnAlgorithm(struct KnnData *knn);
-
-// Function to sort the best voters in ascending order based on temporary distances
 void sortAscVoters(struct KnnData *knn);
 
-// Main function
 int knn() {
-    char input_str[256];
     struct KnnData knn;
 
-    // Input k value
-    printf("Set number of voters (k=): ");
-    scanf("%d", &knn.k);
+    // Set number of voters (k = 3)
+    knn.k = 3;
 
     // Allocate memory for best voters
-    knn.best_voters = (struct Sample **)malloc(knn.k * sizeof(struct Sample *));
+    knn.best_voters = (struct Sample **) malloc(knn.k * sizeof(struct Sample *));
 
-    // Input and parse training samples file
-    printf("Provide categorized samples file (train data): ");
-    scanf("%s", input_str);
-    parseFileToSamples(&knn, input_str);
+    // Parse training samples file (Answers.csv)
+    parseFileToSamples(&knn, "Answers.csv");
 
-    // Input and parse uncategorized samples file
-    printf("Provide uncategorized samples file (new data): ");
-    scanf("%s", input_str);
-    parseFileToSamples(&knn, input_str);
+    // Parse uncategorized samples file (datast.csv)
+    parseFileToSamples(&knn, "datast.csv");
 
     // Perform k-NN algorithm
     printf("Perform k-NN algorithm\n");
     knnAlgorithm(&knn);
 
-    // Ask user if they want to save the output
-    printf("Do you want to save the output (yes/no)? ");
-    scanf("%s", input_str);
-
-    // Save the output if requested
-    if (strcmp(input_str, "yes") == 0 || strcmp(input_str, "y") == 0) {
-        printf("Where do you want to save the newly categorized data (filepath)? ");
-        scanf("%s", input_str);
-        parseSamplesToFile(&knn, input_str);
-        printf("Completed.\n");
-    }
-
-    // Display training samples
-    printf("Training Samples:\n");
+    // Display "Your answers" (previously "Training Samples")
+    printf("Your Answers:\n");
     for (int i = 0; i < knn.samples_count[0]; i++) {
-        printf("Sample %d -", i);
+        printf("Answer %d -", i + 1);
         for (int j = 0; j < knn.samples_dimensions[0]; j++)
             printf(" %f", (knn.samples[0] + i)->dimensions[j]);
         printf(" | %d\n", (knn.samples[0] + i)->group);
     }
 
-    // Display newly categorized samples
-    printf("New Categorized Samples:\n");
+    // Display "Recommended Educations" (previously "New Categorized Samples")
+    printf("Recommended Educations:\n");
     for (int i = 0; i < knn.samples_count[1]; i++) {
-        printf("Sample %d -", i);
+        printf("Education %d -", i + 1);
         for (int j = 0; j < knn.samples_dimensions[1]; j++)
             printf(" %f", (knn.samples[1] + i)->dimensions[j]);
         printf(" | %d\n", (knn.samples[1] + i)->group);
     }
 
+    // Free allocated memory
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < knn.samples_count[i]; j++) {
+            if ((knn.samples[i] + j)->dimensions != NULL) {
+                free((knn.samples[i] + j)->dimensions);
+                (knn.samples[i] + j)->dimensions = NULL;
+            }
+        }
+        knn.samples[i] = NULL;
+    }
+
+    free(knn.best_voters);
+
     return 0;
 }
 
-// Function to parse a comma-separated string into a sample structure
+
 void parseStringToSample(struct Sample *sample, char *string, uint32_t max_dimensions, uint8_t has_group) {
     int tmp_count = has_group == 0 ? 0 : 1;
     char *tmp_ptr = strtok(string, ",");
+
+    // Allocate memory for dimensions
+    sample->dimensions = (DATATYPE *)malloc(max_dimensions * sizeof(DATATYPE));
+    if (sample->dimensions == NULL) {
+        fprintf(stderr, "Memory allocation failed.\n");
+        exit(EXIT_FAILURE);
+    }
 
     if (has_group == 0)
         sample->group = atoi(tmp_ptr);
@@ -100,7 +103,6 @@ void parseStringToSample(struct Sample *sample, char *string, uint32_t max_dimen
         sample->dimensions[tmp_count++] = atof(tmp_ptr);
 }
 
-// Function to parse samples from a file into the KnnData structure
 void parseFileToSamples(struct KnnData *knn, char *filepath) {
     int tmp_count;
     char line[256];
@@ -113,17 +115,15 @@ void parseFileToSamples(struct KnnData *knn, char *filepath) {
     }
 
     // Read the first line to determine the type of samples (categorized or uncategorized)
-    fgets(line, 128, file_ptr);
+    fgets(line, 256, file_ptr);
 
     tmp_count = strstr(line, "uncategorized") == NULL ? 0 : 1;
 
     // Read samples count, dimensions, and allocate memory
-    fgets(line, 128, file_ptr);
+    fgets(line, 256, file_ptr);
     knn->samples_count[tmp_count] = atoi(line);
 
-    knn->samples[tmp_count] = (struct Sample *)malloc(knn->samples_count[tmp_count] * sizeof(struct Sample));
-
-    fgets(line, 128, file_ptr);
+    fgets(line, 256, file_ptr);
     knn->samples_dimensions[tmp_count] = atoi(line);
 
     // Read each line in the file and parse it into samples
@@ -131,19 +131,36 @@ void parseFileToSamples(struct KnnData *knn, char *filepath) {
         (knn->samples[tmp_count] + i)->dimensions =
                 (DATATYPE *)malloc(knn->samples_dimensions[tmp_count] * sizeof(DATATYPE));
 
-        fgets(line, 128, file_ptr);
+        fgets(line, 256, file_ptr);
         parseStringToSample(knn->samples[tmp_count] + i, line, knn->samples_dimensions[tmp_count], tmp_count);
     }
 
     fclose(file_ptr);
 }
 
-// Placeholder function to parse samples from the KnnData structure into a file
 void parseSamplesToFile(struct KnnData *knn, char *filepath) {
-    printf(":) not working yet..."); // Placeholder
+    FILE *file_ptr = fopen(filepath, "w");
+
+    // Check if the file was opened successfully
+    if (file_ptr == NULL) {
+        fprintf(stderr, "Error opening file: %s\n", filepath);
+        exit(EXIT_FAILURE);
+    }
+
+    // Write the number of samples
+    fprintf(file_ptr, "Categorized,%d,%d\n", knn->samples_count[1], knn->samples_dimensions[1]);
+
+    // Write each sample to the file
+    for (int i = 0; i < knn->samples_count[1]; i++) {
+        for (int j = 0; j < knn->samples_dimensions[1]; j++) {
+            fprintf(file_ptr, "%f,", (knn->samples[1] + i)->dimensions[j]);
+        }
+        fprintf(file_ptr, "%d\n", (knn->samples[1] + i)->group);
+    }
+
+    fclose(file_ptr);
 }
 
-// Function to sort the best voters in ascending order based on temporary distances
 void sortAscVoters(struct KnnData *knn) {
     struct Sample *tmp_sample = NULL;
 
@@ -156,7 +173,6 @@ void sortAscVoters(struct KnnData *knn) {
             }
 }
 
-// Function to perform the k-NN algorithm
 void knnAlgorithm(struct KnnData *knn) {
     double euclidean_distance;
     uint32_t *most_common[2], selected_group_pos;
@@ -225,12 +241,26 @@ void knnAlgorithm(struct KnnData *knn) {
             if (*(most_common[1] + j) == 0)
                 break;
 
-            if (*(most_common[0] + j) > *(most_common[0] + selected_group_pos))
+            if (*(most_common[1] + j) > *(most_common[1] + selected_group_pos))
                 selected_group_pos = j;
         }
 
         // Assign the most common group to the uncategorized sample
         (knn->samples[1] + i)->group = *(most_common[0] + selected_group_pos);
+
+        // Print the result for the uncategorized sample
+        printf("Uncategorized Sample %d - Predicted Group: %d\n", i, (knn->samples[1] + i)->group);
+
+        // Print the 3 nearest educations
+        printf("3 Nearest Educations:\n");
+        for (int j = 0; j < 3 && knn->best_voters[j] != NULL; j++) {
+            printf("Education %d - Group: %d - Dimensions:", j + 1, knn->best_voters[j]->group);
+            for (int q = 0; q < knn->samples_dimensions[0]; q++) {
+                printf(" %f", knn->best_voters[j]->dimensions[q]);
+            }
+            printf(" - Distance: %f\n", knn->best_voters[j]->tmp_distance);
+        }
+        printf("\n");
     }
 
     // Free allocated memory
