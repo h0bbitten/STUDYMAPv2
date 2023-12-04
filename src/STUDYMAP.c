@@ -5,7 +5,6 @@
 #include "KNN.h"
 #include <math.h>
 
-
 int main() {
     //The program boots and the user is prompted to login with "MY-ID"
     //Load_user(...)
@@ -28,7 +27,7 @@ int main() {
      *  2. Hvis brugeren ikke har ungdomsuddannelse så lad bruger vælge en
      *
      */
-    //User having a lack of secondary education will return an error and log out the user
+
 
     //Is there previously saved results?
     //***YES***

@@ -5,14 +5,31 @@
 #include <string.h>
 #include <stdbool.h>
 
+
 Logins current_user;
+
+
+//Set path for Users
+char* users_path = {"Databases/Users.csv"};
+
+void hash(char *str, unsigned int *result) {
+    *result = 0;
+
+    while (*str) {
+        *result = (*result * 5) + *str++;
+    }
+}
+
+
 
 void login()
 {
     //Creates a user of the type struct Logins and inputs the current user into it
     current_user = load_user();
+    unsigned int hashed_password;
+
     //debug line
-    printf("Username: %s, Password:  %s, CPR: %s",current_user.username, current_user.password, current_user.cpr);
+    printf("Username: %s, Password:  %u, CPR: %s",current_user.username, hashed_password, current_user.cpr);
 }
 
 Logins load_user()
@@ -24,13 +41,13 @@ Logins load_user()
     Logins this_user;
 
     //Checks if a Users file exists and creates one if one doesn't exist
-    Users = fopen("Users.csv", "r");
+    Users = fopen(users_path, "r");
     if(Users == NULL)
     {
-        Users = fopen("Users.csv", "w");
+        Users = fopen(users_path, "w");
         fclose(Users);
 
-        Users = fopen("Users.csv", "r");
+        Users = fopen(users_path, "r");
     }
     y_n = login_or_signup();
 
@@ -39,7 +56,7 @@ Logins load_user()
         //If the user sign_up, then we need to add a new user to our database(Users.csv)
 
         //This opens the csv file Users in the "r" (read) mode
-        Users = fopen("Users.csv", "r");
+        Users = fopen(users_path, "r");
         //Error case: checks if the file is opened correctly
         if(Users == NULL)
         {
@@ -69,29 +86,43 @@ Logins load_user()
                     printf("Username already exists. Please choose a different username.\n");
                     break;
                 }
+
             }
 
         } while (usernameExists);
 
         fclose(Users);
 
+        unsigned int hashed_password;
+
         printf("Please enter a password that is no longer than %d characters\n>", PASSWORD_MAX_LENGTH);
         scanf("%s", this_user.password);
 
-        fprintf(Users, "%s,%s,\n", this_user.username, this_user.password);
-        printf("Please enter your CPR-number\n>");
-        scanf("%s", this_user.cpr);
+        //fprintf(Users, "%s,%s,\n", this_user.username, this_user.password);
+
+        bool correct_cpr = false;
+        do {
+            printf("Please enter your CPR-number\n>");
+            scanf("%s", this_user.cpr);
+            
+            if (strlen(this_user.cpr) != CPR_MAX_LENGTH){
+                printf("The entered CPR-number is not the correct length. Try again.\n");
+            } else {
+                correct_cpr = true;
+            }
+        } while(correct_cpr == false);
 
         //This opens the csv file Users in the "a" (append) mode
-        Users = fopen("Users.csv", "a");
+        Users = fopen(users_path, "a");
         //Error case: checks if the file is opened correctly
         if(Users == NULL)
         {
             printf("Error: File not found.\n");
             exit(1);
         }
+        hash(this_user.password, &hashed_password);
 
-        fprintf(Users, "%s,%s,%s\n", this_user.username, this_user.password, this_user.cpr);
+        fprintf(Users, "%s,%u,%s\n", this_user.username, hashed_password, this_user.cpr);
         fclose(Users);
 
         return this_user;
@@ -100,6 +131,7 @@ Logins load_user()
     if (y_n == 'L' || y_n == 'l') {
         bool found_username = false;
         bool found_password = false;
+        unsigned int hashed_password;
 
         do {
             printf("Please enter your username\n>");
@@ -107,7 +139,7 @@ Logins load_user()
 
             printf("Please enter your password\n>");
             scanf(" %s", this_user.password);
-
+            hash(this_user.password, &hashed_password);
             char line[MAX_LINE_LENGTH];
 
             rewind(Users);
@@ -117,7 +149,7 @@ Logins load_user()
                 if (username != NULL && strcmp(username, this_user.username) == 0) {
                     found_username = true;
                     char *password = strtok(NULL, ",");
-                    if (password != NULL && strcmp(password, this_user.password) == 0) {
+                    if (password != NULL && atoi(password) == hashed_password) {
                         found_password = true;
                         fclose(Users);
                         break;

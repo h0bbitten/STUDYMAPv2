@@ -20,6 +20,8 @@ struct KnnData {
     uint32_t samples_count[2];
     uint32_t samples_dimensions[9];
 };
+// Function to parse a string into a sample structure
+void parseStringToSample(struct Sample *sample, char *string, uint32_t max_dimensions, uint8_t has_group);
 
 void parseStringToSample(struct Sample *sample, char *string, uint32_t max_dimensions, uint8_t has_group);
 void parseFileToSamples(struct KnnData *knn, char *filepath);
