@@ -8,6 +8,10 @@
 
 Logins current_user;
 
+
+//Set path for Users
+char* users_path = {"Databases/Users.csv"};
+
 void hash(char *str, unsigned int *result) {
     *result = 0;
 
@@ -15,6 +19,7 @@ void hash(char *str, unsigned int *result) {
         *result = (*result * 5) + *str++;
     }
 }
+
 
 
 void login()

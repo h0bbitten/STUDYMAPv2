@@ -17,4 +17,3 @@ extern Logins current_user;
 void login();
 Logins load_user();
 char login_or_signup();
-void clear_terminal();
