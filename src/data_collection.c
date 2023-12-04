@@ -85,8 +85,18 @@ Logins load_user() {
 
         unsigned int hashed_password;
 
-        printf("Please enter a password that is no longer than %d characters\n>", PASSWORD_MAX_LENGTH);
-        scanf("%s", this_user.password);
+        bool correct_password = false;
+        do {
+            printf("Please enter a password that is no longer than %d characters\n>", PASSWORD_MAX_LENGTH);
+            scanf("%s", this_user.password);
+
+            if (strlen(this_user.password) < PASSWORD_MIN_LENGTH){
+                printf("The entered password must be at least 8 characters. Try again.\n");
+            } else {
+                correct_password = true;
+            }
+        } while (correct_password == false);
+
 
         bool correct_cpr = false;
         do {
