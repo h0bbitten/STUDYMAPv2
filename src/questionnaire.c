@@ -1,6 +1,7 @@
 #include "questionnaire.h"
 #include "data_collection.h"
 
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
