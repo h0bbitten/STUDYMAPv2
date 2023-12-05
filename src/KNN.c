@@ -1,3 +1,4 @@
+#include "data_collection.h"
 #include "questionnaire.h"
 
 #include <stdio.h>
@@ -7,7 +8,7 @@
 #include <stdint.h>
 
 #define DATATYPE double
-char* answers_path;
+char *answers_path = {"Databases/Answers.csv"}; // Assuming the path is correct
 
 struct Sample {
     DATATYPE *dimensions;
@@ -35,6 +36,10 @@ void knnAlgorithm(struct KnnData *knn);
 
 void sortAscVoters(struct KnnData *knn);
 
+
+// Function to get user input from the questionnaire
+void getUserInput(struct KnnData *knn, char *userInputFile);
+
 int knn() {
     struct KnnData knn;
 
@@ -43,9 +48,16 @@ int knn() {
 
     // Allocate memory for best voters
     knn.best_voters = (struct Sample **)malloc(knn.k * sizeof(struct Sample *));
+    if (knn.best_voters == NULL) {
+        fprintf(stderr, "Memory allocation failed.\n");
+        exit(EXIT_FAILURE);
+    }
 
     // Parse training samples file (Answers.csv)
     parseFileToSamples(&knn, answers_path);
+
+    // Get user input from the questionnaire
+    getUserInput(&knn, "Databases/Answers/allan.csv");
 
     // Parse uncategorized samples file (datast.csv)
     parseFileToSamples(&knn, "Databases/datast.csv");
@@ -75,17 +87,48 @@ int knn() {
     // Free allocated memory
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < knn.samples_count[i]; j++) {
-            if ((knn.samples[i] + j)->dimensions != NULL) {
-                free((knn.samples[i] + j)->dimensions);
-                (knn.samples[i] + j)->dimensions = NULL;
-            }
+            free((knn.samples[i] + j)->dimensions);
+            (knn.samples[i] + j)->dimensions = NULL;
         }
+        free(knn.samples[i]);
         knn.samples[i] = NULL;
     }
 
     free(knn.best_voters);
 
     return 0;
+}
+
+// Function to get user input from the questionnaire
+void getUserInput(struct KnnData *knn, char *userInputFile) {
+    char line[256];
+    FILE *file_ptr = fopen(userInputFile, "r");
+
+    // Error handling for file opening
+    if (file_ptr == NULL) {
+        fprintf(stderr, "Error opening file: %s\n", userInputFile);
+        exit(EXIT_FAILURE);
+    }
+
+    // Read user input from the file
+    fgets(line, sizeof(line), file_ptr);
+
+    // Create a sample for user input
+    struct Sample userSample;
+    userSample.dimensions = (DATATYPE *)malloc(knn->samples_dimensions[0] * sizeof(DATATYPE));
+    if (userSample.dimensions == NULL) {
+        fprintf(stderr, "Memory allocation failed.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // Parse user input string into the sample
+    parseStringToSample(&userSample, line, knn->samples_dimensions[0], 1);
+
+    // Set the user sample in the KnnData structure
+    knn->samples[0] = &userSample;
+    knn->samples_count[0] = 1;
+
+    fclose(file_ptr);
 }
 
 void parseStringToSample(struct Sample *sample, char *string, uint32_t max_dimensions, uint8_t has_group) {
@@ -171,8 +214,9 @@ void parseFileToSamples(struct KnnData *knn, char *filepath) {
         }
     }
 
-    fclose(file_ptr);
+    fclose(file_ptr); // Move this line here
 }
+
 
 void sortAscVoters(struct KnnData *knn) {
     struct Sample *tmp_sample = NULL;
