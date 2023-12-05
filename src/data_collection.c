@@ -62,11 +62,11 @@ Logins load_user() {
         do {
             bool correct_username = false;
             do {
-                printf("Please enter a username that is no longer than %d characters\n>", USERNAME_MAX_LENGTH);
+                printf("Please enter a username (Min. %d characters & Max. %d characters)\n>", USERNAME_MIN_LENGTH, USERNAME_MAX_LENGTH);
                 scanf("%s", this_user.username);
 
                 if (strlen(this_user.username) < USERNAME_MIN_LENGTH){
-                    printf("The entered password must be at least 5 characters. Try again.\n");
+                    printf("The entered username must be at least 5 characters. Try again.\n");
                 } else {
                     correct_username = true;
                 }
