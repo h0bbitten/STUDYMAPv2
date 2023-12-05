@@ -1,9 +1,8 @@
-"Education","Praktisk læring","Programmering","Software","Matematisk","Gruppearbejde","Projektarbejde","Career Prospects","Informative Assignments"
-"Computer Science",3,8,10,7,10,10,8,5
-"Computer Technology",3,8,10,8,7,8,8,5
-"Data Science and ML",5,6,8,10,8,8,10,7
-"Information Technology",8,4,7,3,6,7,5,2
-"Interaction Design",6,3,4,2,4,7,8,3
-"Software Engineering",3,8,10,8,10,10,8,6
-"Robotics",8,3,2,10,7,6,8,9
-"Electronic and System Design",7,8,7,9,7,9,7,9
+Computer Science,,q_01,3,q_02,8,q_03,10,q_04,7,q_05,10,q_06,10,q_07,8,q_08,5,done,
+Computer Technology,,q_01,3,q_02,8,q_03,10,q_04,8,q_05,7,q_06,8,q_07,8,q_08,5,done,
+Data Science and ML,,q_01,5,q_02,6,q_03,8,q_04,10,q_05,8,q_06,8,q_07,10,q_08,7,done,
+Information Technology,,q_01,8,q_02,4,q_03,7,q_04,3,q_05,6,q_06,7,q_07,5,q_08,2,done,
+Interaction Design,,q_01,6,q_02,3,q_03,4,q_04,2,q_05,4,q_06,7,q_07,8,q_08,3,done,
+Software Engineering,,q_01,3,q_02,8,q_03,10,q_04,8,q_05,10,q_06,10,q_07,8,q_08,6,done,
+Robotics,,q_01,8,q_02,3,q_03,2,q_04,10,q_05,7,q_06,6,q_07,8,q_08,9,done,
+Electronic and System Design,,q_01,7,q_02,8,q_03,7,q_04,9,q_05,7,q_06,9,q_07,7,q_08,9,done,

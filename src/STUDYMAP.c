@@ -8,7 +8,7 @@
 int main() {
     //The program boots and the user is prompted to login with "MY-ID"
     //Load_user(...)
-    login();
+    //login();
     /* TODO:
      *  1. Unique username DOOOOOOOOOONE
      *  2. Password hashing (Open SSL)
@@ -32,7 +32,7 @@ int main() {
     //Is there previously saved results?
     //***YES***
     //The user can now either start a new test or load previous results
-    Questionnaire();
+    //Questionnaire();
     /* TODO:
      *  1. Insert/update questions - Jonas!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
      *  2. Questionnaire progress
