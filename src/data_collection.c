@@ -60,8 +60,17 @@ Logins load_user() {
         int usernameExists;
 
         do {
-            printf("Please enter a username that is no longer than %d characters\n>", USERNAME_MAX_LENGTH);
-            scanf("%s", this_user.username);
+            bool correct_username = false;
+            do {
+                printf("Please enter a username that is no longer than %d characters\n>", USERNAME_MAX_LENGTH);
+                scanf("%s", this_user.username);
+
+                if (strlen(this_user.username) < USERNAME_MIN_LENGTH){
+                    printf("The entered password must be at least 5 characters. Try again.\n");
+                } else {
+                    correct_username = true;
+                }
+            } while (correct_username == false);
 
             char line[MAX_LINE_LENGTH];
             usernameExists = 0;
@@ -87,7 +96,7 @@ Logins load_user() {
 
         bool correct_password = false;
         do {
-            printf("Please enter a password that is no longer than %d characters\n>", PASSWORD_MAX_LENGTH);
+            printf("Please enter a password (Min. %d characters & Max. %d characters)\n>", PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH);
             scanf("%s", this_user.password);
 
             if (strlen(this_user.password) < PASSWORD_MIN_LENGTH){
@@ -100,7 +109,7 @@ Logins load_user() {
 
         bool correct_cpr = false;
         do {
-            printf("Please enter your CPR-number\n>");
+            printf("Please enter your CPR-number.\n>");
             scanf("%s", this_user.cpr);
 
             if (strlen(this_user.cpr) != CPR_MAX_LENGTH) {
