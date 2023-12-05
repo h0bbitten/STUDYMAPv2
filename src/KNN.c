@@ -6,10 +6,8 @@
 #include <math.h>
 #include <stdint.h>
 
-char* answers_path;
-
-//ref devcoons, maybe?
 #define DATATYPE double
+char* answers_path;
 
 struct Sample {
     DATATYPE *dimensions;
@@ -24,13 +22,17 @@ struct KnnData {
     uint32_t samples_count[2];
     uint32_t samples_dimensions[9];
 };
+
 // Function to parse a string into a sample structure
 void parseStringToSample(struct Sample *sample, char *string, uint32_t max_dimensions, uint8_t has_group);
 
-void parseStringToSample(struct Sample *sample, char *string, uint32_t max_dimensions, uint8_t has_group);
+// Function to parse a string into a sample structure for datast.csv
+void parseDatastStringToSample(struct Sample *sample, char *string);
+
 void parseFileToSamples(struct KnnData *knn, char *filepath);
-void parseSamplesToFile(struct KnnData *knn, char *filepath);
+
 void knnAlgorithm(struct KnnData *knn);
+
 void sortAscVoters(struct KnnData *knn);
 
 int knn() {
@@ -40,7 +42,7 @@ int knn() {
     knn.k = 3;
 
     // Allocate memory for best voters
-    knn.best_voters = (struct Sample **) malloc(knn.k * sizeof(struct Sample *));
+    knn.best_voters = (struct Sample **)malloc(knn.k * sizeof(struct Sample *));
 
     // Parse training samples file (Answers.csv)
     parseFileToSamples(&knn, answers_path);
@@ -86,7 +88,6 @@ int knn() {
     return 0;
 }
 
-
 void parseStringToSample(struct Sample *sample, char *string, uint32_t max_dimensions, uint8_t has_group) {
     int tmp_count = has_group == 0 ? 0 : 1;
     char *tmp_ptr = strtok(string, ",");
@@ -103,8 +104,32 @@ void parseStringToSample(struct Sample *sample, char *string, uint32_t max_dimen
     else
         sample->dimensions[0] = atof(tmp_ptr);
 
-    while ((tmp_ptr = strtok(NULL, ",")) != NULL)
-        sample->dimensions[tmp_count++] = atof(tmp_ptr);
+    int dimension_index = 0;
+    while ((tmp_ptr = strtok(NULL, ",")) != NULL) {
+        // Ignore the first three values in Answers.csv
+        if (dimension_index >= 3) {
+            sample->dimensions[tmp_count++] = atof(tmp_ptr);
+        }
+        dimension_index++;
+    }
+}
+
+void parseDatastStringToSample(struct Sample *sample, char *string) {
+    char *tmp_ptr = strtok(string, ",");
+
+    // Allocate memory for dimensions
+    sample->dimensions = (DATATYPE *)malloc(9 * sizeof(DATATYPE));
+    if (sample->dimensions == NULL) {
+        fprintf(stderr, "Memory allocation failed.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    sample->group = 0; // Assuming group information is not present in datast.csv
+
+    int dimension_index = 0;
+    while ((tmp_ptr = strtok(NULL, ",")) != NULL) {
+        sample->dimensions[dimension_index++] = atof(tmp_ptr);
+    }
 }
 
 void parseFileToSamples(struct KnnData *knn, char *filepath) {
@@ -136,30 +161,14 @@ void parseFileToSamples(struct KnnData *knn, char *filepath) {
                 (DATATYPE *)malloc(knn->samples_dimensions[tmp_count] * sizeof(DATATYPE));
 
         fgets(line, 256, file_ptr);
-        parseStringToSample(knn->samples[tmp_count] + i, line, knn->samples_dimensions[tmp_count], tmp_count);
-    }
 
-    fclose(file_ptr);
-}
-
-void parseSamplesToFile(struct KnnData *knn, char *filepath) {
-    FILE *file_ptr = fopen(filepath, "w");
-
-    // Check if the file was opened successfully
-    if (file_ptr == NULL) {
-        fprintf(stderr, "Error opening file: %s\n", filepath);
-        exit(EXIT_FAILURE);
-    }
-
-    // Write the number of samples
-    fprintf(file_ptr, "Categorized,%d,%d\n", knn->samples_count[1], knn->samples_dimensions[1]);
-
-    // Write each sample to the file
-    for (int i = 0; i < knn->samples_count[1]; i++) {
-        for (int j = 0; j < knn->samples_dimensions[1]; j++) {
-            fprintf(file_ptr, "%f,", (knn->samples[1] + i)->dimensions[j]);
+        if (tmp_count == 0) {
+            // Parse training samples (Answers.csv)
+            parseStringToSample(knn->samples[tmp_count] + i, line, knn->samples_dimensions[tmp_count], tmp_count);
+        } else {
+            // Parse uncategorized samples (datast.csv)
+            parseDatastStringToSample(knn->samples[tmp_count] + i, line);
         }
-        fprintf(file_ptr, "%d\n", (knn->samples[1] + i)->group);
     }
 
     fclose(file_ptr);
@@ -195,10 +204,10 @@ void knnAlgorithm(struct KnnData *knn) {
         for (int j = 0; j < knn->samples_count[0]; j++) {
             euclidean_distance = 0;
 
-            // Calculate Euclidean distance
-            for (int q = 0; q < knn->samples_dimensions[0]; q++)
-                euclidean_distance += pow(
-                        (knn->samples[0] + j)->dimensions[q] - (knn->samples[1] + i)->dimensions[q], 2);
+            // Calculate Euclidean distance, starting from index 3 for training samples
+            for (int q = 3; q < knn->samples_dimensions[0]; q++)
+                euclidean_distance +=
+                        pow((knn->samples[0] + j)->dimensions[q] - (knn->samples[1] + i)->dimensions[q], 2);
 
             (knn->samples[0] + j)->tmp_distance = sqrt(euclidean_distance);
 
