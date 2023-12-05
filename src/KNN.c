@@ -1,4 +1,5 @@
 #include "questionnaire.h"
+#include "KNN.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,24 +8,9 @@
 #include <string.h>
 #include <ctype.h>
 
-#define NUM_EDU 8
-#define NUM_ANSWER 8
-
 char* answers_path;
 char* datast_path = {"Databases/datast.csv"};
-
-typedef struct KnnDataPoints {
-
-    int answers[NUM_ANSWER];
-    char* name;
-    double result;
-
-} KnnDataPoints;
-
-void parse_data(FILE* data_stream, KnnDataPoints* KnnDataPoint);
-double Euclidean_distance(KnnDataPoints KnnTrainingPoint, KnnDataPoints KnnUserPoint);
-int smallest_value(const void *a, const void *b);
-void cleanup(KnnDataPoints* KnnDataPoint);
+char* result_path;
 
 void knn() {
 
@@ -33,6 +19,7 @@ void knn() {
     FILE* datast;
     datast = fopen(datast_path, "r");
 
+    //Parse data from datast to KNN
     for (int i = 0; i < NUM_EDU; ++i) {
         parse_data(datast, &KnnTrainingPoint[i]);
     }
@@ -45,30 +32,57 @@ void knn() {
     answer = fopen("Databases/Answers/Q.csv", "r");
 
     KnnDataPoints KnnUserPoint;
+    //Parse data from current users answers to KNN
     parse_data(answer, &KnnUserPoint);
 
     fclose(answer);
 
+    //Calculate distance between all educations and answers
     for (int i = 0; i < NUM_EDU; i++) {
         KnnTrainingPoint[i].result = Euclidean_distance(KnnTrainingPoint[i], KnnUserPoint);
     }
 
+    //Sorts the distances smallest values first
     qsort(KnnTrainingPoint, 4, sizeof(KnnDataPoints), smallest_value);
 
-
+    //Top k nearest neighbors to return
     int k = 3;
 
-    printf("%s\n", KnnUserPoint.name);
+    //Displays results to user, probably should be moved from the KNN function
+    printf("Top %d recommended educations for %s;\n\n", k, KnnUserPoint.name);
     for (int i = 0; i < k; i++) {
         printf("%s: %f\n", KnnTrainingPoint[i].name, KnnTrainingPoint[i].result);
     }
+
+    //Create path for results for current user
+    result_path = (char*)malloc(PATH_MAX);
+    if (!result_path) {
+        fprintf(stderr, "Error allocating memory for result_path.\n");
+    }
+    snprintf(result_path, PATH_MAX, "Databases/Results/%s.csv", KnnUserPoint.name);
+
+    //Write to result file
+    FILE *Result;
+    Result = fopen(result_path, "a");
+
+    //Create file for user results if it doesn't exist
+    if(Result == NULL)
+    {
+        Result = fopen(result_path, "w");
+    }
+
+    //Write top k results to file
+    for (int i = 0; i < k; i++) {
+        fprintf(Result, "%s,%f\n", KnnTrainingPoint[i].name, KnnTrainingPoint[i].result);
+    }
+
+    fclose(Result);
 
     // Clean up allocated memory
     for (int i = 0; i < NUM_EDU; i++) {
         cleanup(&KnnTrainingPoint[i]);
     }
     cleanup(&KnnUserPoint);
-
 }
 
 void parse_data(FILE* data_stream, KnnDataPoints* KnnDataPoint) {
@@ -117,16 +131,17 @@ void parse_data(FILE* data_stream, KnnDataPoints* KnnDataPoint) {
 
 double Euclidean_distance(KnnDataPoints KnnTrainingPoint, KnnDataPoints KnnUserPoint){
 
+    //Calculates a part of Euclidean's distance formula for each answer
     double distance = 0.0;
-
-
     for (int i = 0; i < 8; i++) {
         distance += pow(KnnUserPoint.answers[i] - KnnTrainingPoint.answers[i], 2);
     }
-
+    //Returns the completely calculated result for all answers
     return sqrt(distance);
 }
 int smallest_value(const void *a, const void *b) {
+
+    //A q-sort compare function that compares the value of results
     double result_A = ((KnnDataPoints *)a)->result;
     double result_B = ((KnnDataPoints *)b)->result;
 
@@ -135,5 +150,6 @@ int smallest_value(const void *a, const void *b) {
     else return 0;
 }
 void cleanup(KnnDataPoints* KnnDataPoint) {
+    //Frees' memory for each name, beause I had to use malloc to allocate memory for them, not sure why it's needed but program crashes without :shrug:
     free(KnnDataPoint->name);
 }
