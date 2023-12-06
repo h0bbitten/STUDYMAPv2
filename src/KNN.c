@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <limits.h>
 
 char* answers_path;
 char* datast_path = {"Databases/datast.csv"};

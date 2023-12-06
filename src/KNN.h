@@ -1,5 +1,5 @@
 #define NUM_EDU 8
-#define NUM_ANSWER 8
+#define NUM_ANSWER 9
 
 extern char* result_path;
 
