@@ -14,7 +14,7 @@ void results() {
 
     scanf("%s", search_term);
 
-    return findText(filename, search_term);
+    return;
 }
 
 void findText(const char *filename, const char *search_term) {
