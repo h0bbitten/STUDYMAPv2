@@ -4,6 +4,7 @@
 #define MAX_CHARACTERS 100
 #define LINE_LENGTH 256
 
+extern char *dir_answers_path;
 extern char* answers_path;
 extern char the_time[40];
 

@@ -1,5 +1,6 @@
 #include "questionnaire.h"
 #include "data_collection.h"
+#include "load_profile.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,33 +9,16 @@
 #include <time.h>
 #include <limits.h>
 
-
+char* dir_answers_path;
 char the_time[40];
 
 void Questionnaire(){
 
-    //Gets the date and time for the start of the questionnaire
-    get_date(the_time);
-
     //Create directory for answers
     make_directory("Databases/Answers");
 
-    //Create path for directory for answers for current user
-    char *dir_answers_path;
-    dir_answers_path = (char*)malloc(PATH_MAX);
-    if (!dir_answers_path) {
-        fprintf(stderr, "Error allocating memory for dir_results_path.\n");
-    }
-    snprintf(dir_answers_path, PATH_MAX, "Databases/Answers/%s", current_user.username);
+    //Create directory for answers for current users
     make_directory(dir_answers_path);
-
-    //Create path for file for answers for current user
-    answers_path = (char*)malloc(PATH_MAX);
-    if (!answers_path) {
-        fprintf(stderr, "Error allocating memory for answers_path.\n");
-    }
-    snprintf(answers_path, PATH_MAX, "%s/%s.csv", dir_answers_path, the_time);
-
 
     //Check if questionaire file exists, if not creates one
     FILE *Answers;

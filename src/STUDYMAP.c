@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "data_collection.h"
+#include "load_profile.h"
 #include "questionnaire.h"
 #include "KNN.h"
+
 #include <math.h>
 
 int main() {
@@ -16,7 +18,7 @@ int main() {
     */
     //Add_user(...)
     //***OR***
-    //Load_profile(...)
+    Load_profile();
 
     //After getting the user profile, the program will get the education data from a remote database
     //This is simulated by getting data from a csv file
