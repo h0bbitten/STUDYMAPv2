@@ -1,4 +1,5 @@
 #include "questionnaire.h"
+#include "data_collection.h"
 #include "KNN.h"
 
 #include <stdio.h>
@@ -9,11 +10,15 @@
 #include <ctype.h>
 #include <limits.h>
 
+
 char* answers_path;
 char* datast_path = {"Databases/datast.csv"};
 char* result_path;
 
+
+
 void knn() {
+
 
     KnnDataPoints KnnTrainingPoint[NUM_EDU];
 
@@ -55,12 +60,28 @@ void knn() {
         printf("%s: %f\n", KnnTrainingPoint[i].name, KnnTrainingPoint[i].result);
     }
 
-    //Create path for results for current user
+    //Create path for directory for results for current user
+    char *dir_results_path;
+    dir_results_path = (char*)malloc(PATH_MAX);
+    if (!dir_results_path) {
+        fprintf(stderr, "Error allocating memory for dir_results_path.\n");
+    }
+    snprintf(dir_results_path, PATH_MAX, "Databases/Results/%s", KnnUserPoint.name);
+
+    //Create directory for results for current user
+
+    if (make_directory(dir_results_path) == 0) {
+        fprintf(stderr, "Directory created successfully.\n");
+    } else {
+        fprintf(stderr, "Failed to create directory.\n");
+    }
+
+    //Create path for results for current user and current questionnaire
     result_path = (char*)malloc(PATH_MAX);
     if (!result_path) {
         fprintf(stderr, "Error allocating memory for result_path.\n");
     }
-    snprintf(result_path, PATH_MAX, "Databases/Results/%s.csv", KnnUserPoint.name);
+    snprintf(result_path, PATH_MAX, "%s/%s.csv",dir_results_path, the_time);
 
     //Write to result file
     FILE *Result;

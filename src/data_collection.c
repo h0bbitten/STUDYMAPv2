@@ -5,9 +5,46 @@
 #include <string.h>
 #include <stdbool.h>
 
+#if defined(_WIN32) || defined(_WIN64)
+#include <direct.h>
+#define mkdir(path, mode) _mkdir(path)
+#elif defined(__APPLE__)
+#include <sys/stat.h>
+    #include <unistd.h>
+#else
+    #include <sys/stat.h>
+    #include <sys/types.h>
+#endif
+
 
 Logins current_user;
 
+int make_directory(const char *path) {
+#if defined(_WIN32) || defined(_WIN64)
+    if (_mkdir(path) == 0) {
+        return 0;
+    } else {
+        fprintf(stderr, "Failed to create directory.\n");
+        return -1;
+    }
+#elif defined(__APPLE__)
+    if (mkdir(path, 0777) == 0) {
+            printf("Directory created successfully.\n");
+            return 0;
+        } else {
+            fprintf(stderr, "Failed to create directory.\n");
+            return -1;
+        }
+    #else
+        if (mkdir(path, 0777) == 0) {
+            printf("Directory created successfully.\n");
+            return 0;
+        } else {
+            fprintf(stderr, "Failed to create directory.\n");
+            return -1;
+        }
+#endif
+}
 
 //Set path for Users
 char* users_path = {"Databases/Users.csv"};
