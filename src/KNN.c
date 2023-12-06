@@ -30,6 +30,7 @@ int make_directory(const char *path) {
     if (_mkdir(path) == 0) {
         return 0;
     } else {
+        fprintf(stderr, "Failed to create directory.\n");
         return -1;
     }
 #elif defined(__APPLE__)
@@ -37,7 +38,7 @@ int make_directory(const char *path) {
             printf("Directory created successfully.\n");
             return 0;
         } else {
-            printf("Failed to create directory.\n");
+            fprintf(stderr, "Failed to create directory.\n");
             return -1;
         }
     #else
@@ -45,7 +46,7 @@ int make_directory(const char *path) {
             printf("Directory created successfully.\n");
             return 0;
         } else {
-            printf("Failed to create directory.\n");
+            fprintf(stderr, "Failed to create directory.\n");
             return -1;
         }
 #endif
