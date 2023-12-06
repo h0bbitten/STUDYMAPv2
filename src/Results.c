@@ -4,7 +4,7 @@
 #include "Results.h"
 
 void Display_results() {
-    char filename[] = "Uni.csv";
+    char filename[] = "Databases/Uni.csv";
     char search_term[MAX_LEN];
 
     printf("Enter search term: \n");
