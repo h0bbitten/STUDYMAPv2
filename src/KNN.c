@@ -29,8 +29,8 @@ void knn() {
 
 
     FILE* answer;
-    //answer = fopen(answers_path, "r");
-    answer = fopen("Databases/Answers/Q.csv", "r");
+    answer = fopen(answers_path, "r");
+    //answer = fopen("Databases/Answers/Q.csv", "r");
 
     KnnDataPoints KnnUserPoint;
     //Parse data from current users answers to KNN
