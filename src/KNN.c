@@ -9,11 +9,61 @@
 #include <ctype.h>
 #include <limits.h>
 
+#if defined(_WIN32) || defined(_WIN64)
+#include <direct.h>
+#define mkdir(path, mode) _mkdir(path)
+#elif defined(__APPLE__)
+#include <sys/stat.h>
+    #include <unistd.h>
+#else
+    #include <sys/stat.h>
+    #include <sys/types.h>
+#endif
+
+
 char* answers_path;
 char* datast_path = {"Databases/datast.csv"};
 char* result_path;
 
+int make_directory(const char *path) {
+#if defined(_WIN32) || defined(_WIN64)
+    if (_mkdir(path) == 0) {
+        printf("Directory created successfully.\n");
+        return 0;
+    } else {
+        printf("Failed to create directory.\n");
+        return -1;
+    }
+#elif defined(__APPLE__)
+    if (mkdir(path, 0777) == 0) {
+            printf("Directory created successfully.\n");
+            return 0;
+        } else {
+            printf("Failed to create directory.\n");
+            return -1;
+        }
+    #else
+        if (mkdir(path, 0777) == 0) {
+            printf("Directory created successfully.\n");
+            return 0;
+        } else {
+            printf("Failed to create directory.\n");
+            return -1;
+        }
+#endif
+}
+
 void knn() {
+
+    const char *dirname = "Databases/Test";
+
+    if (make_directory(dirname) == 0) {
+        printf("Directory created successfully.\n");
+    } else {
+        printf("Failed to create directory.\n");
+    }
+
+
 
     KnnDataPoints KnnTrainingPoint[NUM_EDU];
 
