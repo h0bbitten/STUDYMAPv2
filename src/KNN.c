@@ -94,7 +94,7 @@ void knn() {
     }
 
     //Sorts the distances smallest values first
-    qsort(KnnTrainingPoint, 4, sizeof(KnnDataPoints), smallest_value);
+    qsort(KnnTrainingPoint, NUM_EDU, sizeof(KnnDataPoints), smallest_value);
 
     //Top k nearest neighbors to return
     int k = 3;
