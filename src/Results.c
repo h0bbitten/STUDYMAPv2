@@ -5,10 +5,22 @@
 #define MAX_LEN 1000
 #define DELIMITER ","
 
+void findText(const char *filename, const char *search_term);
+void results();
+
+void results() {
+    char filename[] = "Uni.csv";
+    char search_term[MAX_LEN];
+
+    scanf("%s", search_term);
+
+    return findText(filename, search_term);
+}
+
 void findText(const char *filename, const char *search_term) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
-        printf("Kjellu's fil ku' ikke åbne.\n");
+        printf("Kjellu's csv-fil ku' ikke åbne.\n");
         return;
     }
 
@@ -27,15 +39,4 @@ void findText(const char *filename, const char *search_term) {
 
     printf("Ingen tekst fundet for '%s'.\n", search_term);
     fclose(file);
-}
-
-int main() {
-    char filename[] = "Uni.csv";
-    char search_term[MAX_LEN];
-
-    scanf("%s", search_term);
-
-    findText(filename, search_term);
-
-    return 0;
 }
