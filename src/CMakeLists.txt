@@ -8,6 +8,8 @@ target_include_directories(questionnaire PUBLIC .)
 
 add_executable(STUDYMAP STUDYMAP.c KNN.c
         KNN.c
+        Results.c
+        Results.h
 )
 
 
