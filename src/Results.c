@@ -3,21 +3,21 @@
 #include <string.h>
 #include "Results.h"
 
-
 void Display_results() {
     char filename[] = "Uni.csv";
     char search_term[MAX_LEN];
 
-    printf("Indtast term \n");
+    printf("Enter search term: \n");
     scanf("%s", search_term);
 
-    return;
+    // Call findText function with filename and search_term
+    findText(filename, search_term);
 }
 
 void findText(const char *filename, const char *search_term) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
-        printf("Kjellu's csv-fil ku' ikke åbne.\n");
+        printf("Could not open %s.\n", filename);
         return;
     }
 
@@ -34,6 +34,6 @@ void findText(const char *filename, const char *search_term) {
         }
     }
 
-    printf("Ingen tekst fundet for '%s'.\n", search_term);
+    printf("No text found for '%s'.\n", search_term);
     fclose(file);
 }

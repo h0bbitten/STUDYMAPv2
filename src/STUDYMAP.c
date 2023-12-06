@@ -47,9 +47,8 @@ int main() {
     //Plot_educations(...)
     //Plot_result(...)
     //Calculate_distance(...)
-    findText();
 
-    Display_result();
+    Display_results();
     //Change number of recommendations or decide a different action
     //Results(...)
     //Saved_results(...)
