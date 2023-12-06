@@ -83,13 +83,11 @@ void questions(char* last_question_id){
         question("Practical learning is important to me", "q_01");
         last_question_id = "q_01";
     }
-
     //question 2
     if (strcmp(last_question_id, "q_01") == 0) {
         question("Programming is interesting to me", "q_02");
         last_question_id = "q_02";
     }
-
     //question 3
     if (strcmp(last_question_id, "q_02") == 0) {
         question("I'm interested in working with software", "q_03");
@@ -97,17 +95,17 @@ void questions(char* last_question_id){
     }
     //question 4
     if (strcmp(last_question_id, "q_03") == 0) {
-        question("Studying in groups is important to me", "q_04");
+        question("I prefer physical attendance over self-study", "q_04");
         last_question_id = "q_04";
     }
     //question 5
     if (strcmp(last_question_id, "q_04") == 0) {
-        question("I prefer physical attendance over self-study", "q_05");
+        question("I enjoy studying and working with math", "q_05");
         last_question_id = "q_05";
     }
     //question 6
     if (strcmp(last_question_id, "q_05") == 0) {
-        question("I enjoy studying and working with math", "q_06");
+        question("Studying in groups is important to me", "q_06");
         last_question_id = "q_06";
     }
     //question 7
@@ -117,12 +115,12 @@ void questions(char* last_question_id){
     }
     //question 8
     if (strcmp(last_question_id, "q_07") == 0) {
-        question("I prefer structured schedules over loose schedules", "q_08");
+        question("I want to gain access to a wide variety of carrier paths", "q_08");
         last_question_id = "q_08";
     }
     //question 9
     if (strcmp(last_question_id, "q_08") == 0) {
-        question("I want to gain access to a wide variety of carrier paths", "q_09");
+        question("I prefer structured timelines where with informative assignments?", "q_09");
         last_question_id = "q_09";
     }
 }
