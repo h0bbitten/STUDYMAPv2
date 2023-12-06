@@ -19,7 +19,6 @@ char* result_path;
 
 void knn() {
 
-
     KnnDataPoints KnnTrainingPoint[NUM_EDU];
 
     FILE* datast;
@@ -60,6 +59,9 @@ void knn() {
         printf("%s: %f\n", KnnTrainingPoint[i].name, KnnTrainingPoint[i].result);
     }
 
+    //Create directory for results
+    make_directory("Databases/Results");
+
     //Create path for directory for results for current user
     char *dir_results_path;
     dir_results_path = (char*)malloc(PATH_MAX);
@@ -69,12 +71,7 @@ void knn() {
     snprintf(dir_results_path, PATH_MAX, "Databases/Results/%s", KnnUserPoint.name);
 
     //Create directory for results for current user
-
-    if (make_directory(dir_results_path) == 0) {
-        fprintf(stderr, "Directory created successfully.\n");
-    } else {
-        fprintf(stderr, "Failed to create directory.\n");
-    }
+    make_directory(dir_results_path);
 
     //Create path for results for current user and current questionnaire
     result_path = (char*)malloc(PATH_MAX);

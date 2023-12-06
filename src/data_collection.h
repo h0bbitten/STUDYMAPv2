@@ -15,7 +15,8 @@ typedef struct
 }Logins;
 
 extern Logins current_user;
-int make_directory(const char *path);
+
+void make_directory(const char *path);
 void login();
 Logins load_user();
 char login_or_signup();

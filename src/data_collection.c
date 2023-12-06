@@ -5,49 +5,37 @@
 #include <string.h>
 #include <stdbool.h>
 
-#if defined(_WIN32) || defined(_WIN64)
-#include <direct.h>
-#define mkdir(path, mode) _mkdir(path)
-#elif defined(__APPLE__)
-#include <sys/stat.h>
-    #include <unistd.h>
+
+#ifdef _WIN32
+    #include <direct.h>
+    #include <errno.h>
+    #include <windows.h>
 #else
     #include <sys/stat.h>
-    #include <sys/types.h>
+    #include <errno.h>
 #endif
 
 
 Logins current_user;
 
-int make_directory(const char *path) {
-#if defined(_WIN32) || defined(_WIN64)
-    if (_mkdir(path) == 0) {
-        return 0;
-    } else {
-        fprintf(stderr, "Failed to create directory.\n");
-        return -1;
+void make_directory(const char *path) {
+#ifdef _WIN32
+    if (_mkdir(path) != 0) {
+        if (errno != EEXIST && errno != ERROR_ALREADY_EXISTS) {
+            fprintf(stderr, "Failed to create directory: %s.\n", path);
+        }
     }
-#elif defined(__APPLE__)
-    if (mkdir(path, 0777) == 0) {
-            printf("Directory created successfully.\n");
-            return 0;
-        } else {
-            fprintf(stderr, "Failed to create directory.\n");
-            return -1;
+#else
+    if (mkdir(path, 0777) != 0) {
+        if (errno != EEXIST) {
+            fprintf(stderr, "Failed to create directory: %s.\n", path);
         }
-    #else
-        if (mkdir(path, 0777) == 0) {
-            printf("Directory created successfully.\n");
-            return 0;
-        } else {
-            fprintf(stderr, "Failed to create directory.\n");
-            return -1;
-        }
+    }
 #endif
 }
 
 //Set path for Users
-char* users_path = {"Databases/Users.csv"};
+char* users_path = {"Databases/Users/Users.csv"};
 
 void hash(char *str, unsigned int *result) {
     *result = 0;
@@ -71,6 +59,15 @@ void login()
 
 Logins load_user()
 {
+
+    //Create directory for databases
+    make_directory("Databases");
+
+
+    //Create directory for users
+    make_directory("Databases/Users");
+
+
     //Creates a variable for a FILE, adds a YES/NO char for user interaction and adds a temporary user,
     //which is used for output
     FILE *Users;
