@@ -8,7 +8,7 @@
 #include <time.h>
 #include <limits.h>
 
-char the_time[30];
+char the_time[40];
 
 void Questionnaire(){
 

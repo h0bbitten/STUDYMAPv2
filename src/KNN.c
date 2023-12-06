@@ -28,10 +28,8 @@ char* result_path;
 int make_directory(const char *path) {
 #if defined(_WIN32) || defined(_WIN64)
     if (_mkdir(path) == 0) {
-        printf("Directory created successfully.\n");
         return 0;
     } else {
-        printf("Failed to create directory.\n");
         return -1;
     }
 #elif defined(__APPLE__)
@@ -54,15 +52,6 @@ int make_directory(const char *path) {
 }
 
 void knn() {
-
-    const char *dirname = "Databases/Allan";
-
-    if (make_directory(dirname) == 0) {
-        printf("Directory created successfully.\n");
-    } else {
-        printf("Failed to create directory.\n");
-    }
-
 
 
     KnnDataPoints KnnTrainingPoint[NUM_EDU];
@@ -105,12 +94,28 @@ void knn() {
         printf("%s: %f\n", KnnTrainingPoint[i].name, KnnTrainingPoint[i].result);
     }
 
-    //Create path for results for current user
+    //Create path for directory for results for current user
+    char *dir_results_path;
+    dir_results_path = (char*)malloc(PATH_MAX);
+    if (!dir_results_path) {
+        fprintf(stderr, "Error allocating memory for dir_results_path.\n");
+    }
+    snprintf(dir_results_path, PATH_MAX, "Databases/Results/%s", KnnUserPoint.name);
+
+    //Create directory for results for current user
+
+    if (make_directory(dir_results_path) == 0) {
+        fprintf(stderr, "Directory created successfully.\n");
+    } else {
+        fprintf(stderr, "Failed to create directory.\n");
+    }
+
+    //Create path for results for current user and current questionnaire
     result_path = (char*)malloc(PATH_MAX);
     if (!result_path) {
         fprintf(stderr, "Error allocating memory for result_path.\n");
     }
-    snprintf(result_path, PATH_MAX, "Databases/Results/%s.csv", KnnUserPoint.name);
+    snprintf(result_path, PATH_MAX, "%s/%s.csv",dir_results_path, the_time);
 
     //Write to result file
     FILE *Result;
