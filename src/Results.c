@@ -1,17 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "Results.h"
 
-#define MAX_LEN 1000
-#define DELIMITER ","
 
-void findText(const char *filename, const char *search_term);
-void results();
-
-void results() {
+void Display_results() {
     char filename[] = "Uni.csv";
     char search_term[MAX_LEN];
 
+    printf("Indtast term \n");
     scanf("%s", search_term);
 
     return;

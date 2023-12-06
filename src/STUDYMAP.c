@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "data_collection.h"
 #include "questionnaire.h"
+#include "Results.h"
 #include "KNN.h"
 #include <math.h>
 
@@ -46,9 +47,9 @@ int main() {
     //Plot_educations(...)
     //Plot_result(...)
     //Calculate_distance(...)
+    findText();
 
-    //Display_result(...) - Frederik!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
+    Display_result();
     //Change number of recommendations or decide a different action
     //Results(...)
     //Saved_results(...)

@@ -1,8 +1,8 @@
-//
-// Created by frede on 06-12-2023.
-//
+#include <stdbool.h>
+#include <stdio.h>
 
-#ifndef STUDYMAP_RESULTS_H
-#define STUDYMAP_RESULTS_H
+#define MAX_LEN 1000
+#define DELIMITER ","
 
-#endif //STUDYMAP_RESULTS_H
+void findText(const char *filename, const char *search_term);
+void Display_results();
