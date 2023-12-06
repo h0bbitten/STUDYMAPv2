@@ -55,7 +55,7 @@ int make_directory(const char *path) {
 
 void knn() {
 
-    const char *dirname = "Databases/Test";
+    const char *dirname = "Databases/Allan";
 
     if (make_directory(dirname) == 0) {
         printf("Directory created successfully.\n");
