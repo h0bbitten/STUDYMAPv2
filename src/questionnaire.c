@@ -328,6 +328,10 @@ void update_user_answers(FILE *file, char *last_question_ID, int line_number) {
     fclose(temp_file);
 
     remove(answers_path);
+
+    snprintf(answers_path, PATH_MAX, "Databases/Answers/%s/%s.csv", current_user.username, the_time);
+
+
     rename("temp.csv", answers_path);
 
     // continues questionnaire
