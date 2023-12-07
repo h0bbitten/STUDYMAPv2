@@ -5,6 +5,8 @@
 #include "KNN.h"
 #include <math.h>
 
+void exit_phase();
+
 int main() {
     //The program boots and the user is prompted to login with "MY-ID"
     //Load_user(...)
@@ -57,9 +59,12 @@ int main() {
     //Saved_results(...)
     knn();
 
+    exit_phase();
+
 return 0;
 }
 
+void exit_phase();
 
 
 

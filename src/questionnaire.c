@@ -77,7 +77,7 @@ void Questionnaire(){
 }
 
 void questions(char* last_question_id){
-    //start of the questionaire
+    //start of the questionnaire
     //question 1
     if (strcmp(last_question_id, "q_00") == 0) {
         question("Practical learning is important to me", "q_01");
