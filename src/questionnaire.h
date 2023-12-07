@@ -5,6 +5,7 @@
 #define LINE_LENGTH 256
 
 extern char* answers_path;
+extern char the_time[40];
 
 void Questionnaire();
 void questions(char* last_question_id);
