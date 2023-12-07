@@ -11,11 +11,6 @@ int main() {
     //The program boots and the user is prompted to login with "MY-ID"
     //Load_user(...)
     login();
-    /* TODO:
-     *  1. Unique username DOOOOOOOOOONE
-     *  2. Password hashing (Open SSL)
-     *  3. Tilføj "cpr-nummer" til bruger struct DOOOOOOOOONE
-    */
     //Add_user(...)
     //***OR***
     Load_profile();
