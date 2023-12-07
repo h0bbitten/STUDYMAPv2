@@ -1,5 +1,6 @@
 #include "questionnaire.h"
 #include "data_collection.h"
+#include "load_profile.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,22 +9,18 @@
 #include <time.h>
 #include <limits.h>
 
-
+char* dir_answers_path;
 char the_time[40];
 
 void Questionnaire(){
 
-    //Create path for answers for current user
-    answers_path = (char*)malloc(PATH_MAX);
-    if (!answers_path) {
-        fprintf(stderr, "Error allocating memory for answers_path.\n");
-    }
-    snprintf(answers_path, PATH_MAX, "Databases/Answers/%s.csv", current_user.username);
+    //Create directory for answers
+    make_directory("Databases/Answers");
 
-    //Gets the date and time for the start of the questionnaire
-    get_date(the_time);
+    //Create directory for answers for current users
+    make_directory(dir_answers_path);
 
-    //Check if questionaire file exists, if not creates one
+    //Check if questionnaire file exists, if not creates one
     FILE *Answers;
 
     Answers = fopen(answers_path, "r");
@@ -33,26 +30,19 @@ void Questionnaire(){
     }
     fclose(Answers);
 
-    //Looks for existing questionaire for user and checks if they are completed or in progress.
-    Answers = fopen(answers_path, "r");
-    int line_number = -1;
-    bool in_progress = check_existing_completed(Answers, &line_number);
-    fclose(Answers);
+    //Looks for existing questionnaire for user and checks if they are completed or in progress.
+    bool in_progress = check_in_progress(answers_path);
+
     //Checks if there is a questionnaire in progress
     //If it isn't then do the questionnaire normally/from the start
     if (in_progress == false){
         printf("\nCreating new questionnaire\n");
-        // Creates a space in the answer file for current user
-        Answers = fopen(answers_path, "a");
-        fprintf(Answers, "%s,%s,", current_user.username, the_time);
-        //Closes the questionaire file
-        fclose(Answers);
 
         questions("q_00");
 
         // Marks completed questionaire
         Answers = fopen(answers_path, "a");
-        fprintf(Answers, "done,\n");
+        fprintf(Answers, "done");
         //Closes the questionnaire file
         fclose(Answers);
     }
@@ -62,16 +52,14 @@ void Questionnaire(){
         printf("\nUnfinished test found!\nContinuing previous questionnaire\n");
 
         // Get the id of the last question answered
-        char last_question_ID[LINE_LENGTH];
-        char* last_question_id_ptr = get_last_question_id(Answers, last_question_ID, line_number);
-        fclose(Answers);
+        char* last_question_id = get_last_question_id(answers_path);
 
         //Continue where the questionnaire left off
-        update_user_answers(Answers, last_question_id_ptr, line_number);
+        questions(last_question_id);
 
         // Marks completed questionaire
         Answers = fopen(answers_path, "a");
-        fprintf(Answers, "done,\n");
+        fprintf(Answers, "done");
         //Closes the questionnaire file
         fclose(Answers);
     }
@@ -126,6 +114,7 @@ void questions(char* last_question_id){
     }
 }
 
+
 void question(char *prompt, char *question_id){
     bool valid_question = false;
     int question_value;
@@ -170,172 +159,88 @@ void clear_terminal(){
     printf("\033[H");   // Move the cursor to the home position
 }
 
-bool check_existing_completed(FILE *file, int *line_number) {
-    char buffer[LINE_LENGTH];
+bool check_in_progress(char *file_path) {
 
-    *line_number = 0; // Initialize line number
+    FILE *file = fopen(file_path, "r");
 
-    // Reads each line into buffer and checks if the first cell is equal to "username"
-    while (fgets(buffer, sizeof(buffer), file) != NULL) {
-        (*line_number)++; // Increment line number for each line
-
-        // Create a separate buffer for strtok
-        char line[LINE_LENGTH];
-        strcpy(line, buffer);
-
-        char *token = strtok(line, ",");
-        char *last_token = NULL;
-        char *second_last_token = NULL;
-
-        if (token != NULL && strcmp(token, current_user.username) == 0) {
-
-            // Found a previous questionnaire, now check if the last cell is equal to "done"
-
-            while (token != NULL) {
-                last_token = token;
-
-                token = strtok(NULL, ",");
-                if (token != NULL){
-                    second_last_token = last_token;
-                    last_token = token;
-                }
-            }
-
-            if (second_last_token != NULL && strcmp(second_last_token, "done") != 0) {
-                return true; // User exists, and questionnaire is not completed
-            }
-        }
+    if (file == NULL) {
+        fprintf(stderr,"Error opening file: %s", file_path);
+        return false;
     }
 
-    return false; // User does not exist
+    // Check if the file is empty
+    if (fgetc(file) == EOF) {
+        fclose(file);
+        return false;
+    }
+
+    // Reset file position indicator to the beginning
+    rewind(file);
+
+    char line[1024];  // Assuming a maximum line length of 1024 characters, adjust as needed
+
+    while (fgets(line, sizeof(line), file) != NULL) {
+        // Remove newline character if present
+        size_t len = strlen(line);
+        if (len > 0 && line[len - 1] == '\n') {
+            line[len - 1] = '\0';
+        }
+
+        // Find the last cell in the line
+        char *last_cell = strrchr(line, ',');
+
+        // Check if the last cell exists and equals "done"
+        if (last_cell != NULL && strcmp(last_cell + 1, "done") == 0) {
+            fclose(file);
+            return false;
+        }
+    }
+    fclose(file);
+
+    return true;
 }
 
-char* get_last_question_id(FILE *file, char *last_question_ID, int Line_number) {
-    char buffer[LINE_LENGTH];
+char* get_last_question_id(char *filename) {
+    FILE *file = fopen(filename, "r");
 
-    file = fopen(answers_path, "r");
     if (file == NULL) {
         perror("Error opening file");
         return NULL;
     }
 
-    // Initialize last_question_ID to an empty string
-    last_question_ID[0] = '\0';
+    char line[1024];
+    char *second_last_cell = NULL;
 
-    int currentLineNumber = 0; // Initialize current line number
-
-    // Read each line into buffer, ',' by ','
-    while (fgets(buffer, sizeof(buffer), file) != NULL) {
-        // Remove the newline character if it exists
-        size_t length = strlen(buffer);
-        if (length > 0 && buffer[length - 1] == '\n') {
-            buffer[length - 1] = '\0';
-        }
-
-        currentLineNumber++; // Increment line number for each line
-
-        if (currentLineNumber == Line_number) {
-            // Create a separate buffer for strtok
-            char line[LINE_LENGTH];
-            strcpy(line, buffer);
-
-            char *token = strtok(line, ",");
-            // Traverse the tokens to find the second to last element
-            char *last_token = NULL;
-            char *second_last_token = NULL;
-            while (token != NULL) {
-                second_last_token = last_token;
-                last_token = token;
-                token = strtok(NULL, ",");
-            }
-
-            // If there is a second to last element, copy it to last_question_ID
-            if (second_last_token != NULL) {
-                strncpy(last_question_ID, second_last_token, LINE_LENGTH);
-                last_question_ID[LINE_LENGTH - 1] = '\0'; // Ensure null-termination
-            }
-
-            fclose(file);
-            if (strcmp(second_last_token, current_user.username) == 0){
-                return "q_00";
-            }
-            return last_question_ID; // Exit the loop after finding the desired line
-        }
-    }
-
-    fclose(file);
-    return NULL; // Return NULL if the desired line is not found
-}
-
-void update_user_answers(FILE *file, char *last_question_ID, int line_number) {
-    // Open file in read mode
-    file = fopen(answers_path, "r");
-
-    // Create temp file to store contents of previous answers
-    FILE *temp_file;
-    temp_file = fopen("temp.csv", "w");
-
-    if (temp_file == NULL || file == NULL) {
-        perror("Error opening file");
-        return;
-    }
-
-    char line[LINE_LENGTH];
-    char buffer[LINE_LENGTH];
-    char output[LINE_LENGTH];
-    int current_line_number = 0;
-
-    // Copy content until the desired line
     while (fgets(line, sizeof(line), file) != NULL) {
-        current_line_number++;
-
-        // If it's the desired line, copy it to the buffer and skip writing it to the temp file
-        if (current_line_number == line_number) {
-            size_t line_length = strlen(line);
-            if (line_length > 0 && line[line_length - 1] == '\n') {
-                // Exclude the newline character
-                line[line_length - 1] = '\0';
-            }
-            strncpy(buffer, line, LINE_LENGTH);
-            buffer[LINE_LENGTH - 1] = '\0'; // Ensure null-termination
-            continue;
+        // Remove newline character if present
+        size_t len = strlen(line);
+        if (len > 0 && line[len - 1] == '\n') {
+            line[len - 1] = '\0';
         }
 
-        // Otherwise, write the line to the temp file
-        fputs(line, temp_file);
-    }
+        // Tokenize the line to extract cells
+        char *token = strtok(line, ",");
+        char *lastCell = NULL;
+        char *secondToLastCellTemp = NULL;
 
-    // If the desired line was found, copy it back to the temp file
-    if (current_line_number >= line_number) {
-
-
-        //Trow away the first two elements of the line
-        // Use strtok to tokenize the input string
-        char *token = strtok(buffer, ",");
-
-        // Use a loop to skip the first two tokens
-        for (int i = 0; i < 2 && token != NULL; ++i) {
-            token = strtok(NULL, ",");
-        }
-
-        // Now 'token' contains the third element and beyond
         while (token != NULL) {
-            snprintf(output, sizeof(output), "%s,%s", output, token);
+            secondToLastCellTemp = lastCell;
+            lastCell = token;
             token = strtok(NULL, ",");
         }
 
-        fprintf(temp_file, "%s,%s%s,",current_user.username, the_time, output);
+        // Check if the second-to-last cell exists
+        if (secondToLastCellTemp != NULL) {
+            // Allocate memory for the result and copy the content
+            second_last_cell = strdup(secondToLastCellTemp);
+            break;
+        }
     }
 
     fclose(file);
-    fclose(temp_file);
-
-    remove(answers_path);
-    rename("temp.csv", answers_path);
-
-    // continues questionnaire
-    questions(last_question_ID);
+    return second_last_cell;
 }
+
 
 void get_date(char *formattedDate) {
     // Get the current time
