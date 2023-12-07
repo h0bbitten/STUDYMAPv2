@@ -43,18 +43,6 @@ void knn() {
         fclose(data_file);
     }
 
-    FILE* datast;
-    datast = fopen(datast_path, "r");
-
-
-    //Parse data from datast to KNN
-    for (int i = 0; i < file_count; ++i) {
-        parse_data(datast, &KnnTrainingPoint[i]);
-    }
-
-    fclose(datast);
-
-
     FILE* answer;
     answer = fopen(answers_path, "r");
 
