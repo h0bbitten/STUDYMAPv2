@@ -13,7 +13,8 @@ int main() {
     login();
     //Add_user(...)
     //***OR***
-    Load_profile();
+    bool do_questionnaire;
+    Load_profile(&do_questionnaire);
 
     //After getting the user profLile, the program will get the education data from a remote database
     //This is simulated by getting data from a csv file
@@ -22,14 +23,12 @@ int main() {
     //Is there previously saved results?
     //***YES***
     //The user can now either start a new test or load previous results
-    Questionnaire();
+    if(do_questionnaire == true){
+        Questionnaire();
+        knn();
+    }
 
-    //KNN algorithm(...) - SØREN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    //Process_data(...)
-    //Plot_educations(...)
-    //Plot_result(...)
-    //Calculate_distance(...)
+    //Filter_results
 
     //Display_result(...) - Frederik!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -39,7 +38,6 @@ int main() {
 
     //***NO***
     //Saved_results(...)
-    knn();
 
 return 0;
 }

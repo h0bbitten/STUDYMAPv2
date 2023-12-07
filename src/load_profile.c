@@ -1,6 +1,7 @@
 #include "load_profile.h"
 #include "data_collection.h"
 #include "questionnaire.h"
+#include "KNN.h"
 
 #include <dirent.h>
 #include <limits.h>
@@ -15,9 +16,9 @@
 #define mkdir(path, mode) _mkdir(path)
 #endif
 
+char* dir_results_path;
 
-
-void Load_profile(){
+void Load_profile(bool* do_questionnaire){
 
     //Gets the date and time for the start of the questionnaire
     get_date(the_time);
@@ -29,30 +30,92 @@ void Load_profile(){
     }
     snprintf(dir_answers_path, PATH_MAX, "Databases/Answers/%s", current_user.username);
 
+    //Create path for directory for results for current user
+    dir_results_path = (char*)malloc(PATH_MAX);
+    if (!dir_results_path) {
+        fprintf(stderr, "Error allocating memory for dir_results_path.\n");
+    }
+    snprintf(dir_results_path, PATH_MAX, "Databases/Results/%s", current_user.username);
 
+    bool no_results;
     //Check if the directory already exists
     if (directory_exists(dir_answers_path)) {
-        printf("\nDirectory exists!!!!!!!.\n\n");
-
-        // Array to store numbered files
-        file_names files[MAX_FILES];
-        int file_count = 0;
+        // Array to store numbered answer files
+        file_names answer_files[MAX_FILES];
+        int answers_file_count = 0;
 
         // Scan file names and assign a number to each file
-        scan_file_names(dir_answers_path, files, &file_count);
+        scan_file_names(dir_answers_path, answer_files, &answers_file_count);
 
-        printf("Previously saved answers:\n");
-        // Display all the files in the directory
-        for (int i = 0; i < file_count; i++) {
-            printf("%d: Answers given on %s\n", files[i].number, files[i].name);
+        // Array to store numbered results files
+        file_names result_files[MAX_FILES];
+
+        int print_counter = 0;
+
+        int results_file_count = 0;
+
+        if (directory_exists(dir_results_path)) {
+            no_results = false;
+
+            // Scan file names and assign a number to each file
+            scan_file_names(dir_results_path, result_files, &results_file_count);
+
+            printf("\nPreviously saved results:\n");
+            // Display all the files in the directory
+            for (int i = 0; i < results_file_count; i++) {
+                print_counter++;
+                printf("%d: View results from test taken on %s\n", print_counter, change_date_format(result_files[i].name));
+            }
+
+
+            if (answers_file_count > results_file_count) {
+                int temp_results_file_count = results_file_count;
+                int index = 0;
+
+                for (int i = 0; i < answers_file_count; i++) {
+
+                    // Allocate memory for temp_path
+                    char* temp_path = (char*)malloc(PATH_MAX);
+                    if (temp_path == NULL) {
+                        fprintf(stderr, "Memory allocation failed for temp_path\n");
+                        break;
+                    }
+
+                    snprintf(temp_path, PATH_MAX, "%s/%s.csv", dir_answers_path, answer_files[i].name);
+                    bool in_progress = check_in_progress(temp_path);
+                    if (in_progress == true){
+                        if (temp_results_file_count == results_file_count) printf("\nTests in progress:\n");
+                        temp_results_file_count++;
+                        index++;
+                        answer_files[i].number = 0;
+                        answer_files[i].number -= index;
+                        print_counter++;
+                        printf("%d: Resume unfinished test from %s\n", print_counter,change_date_format(answer_files[i].name));
+                    }
+                    free(temp_path);
+                }
+
+            }
+
+        }
+        else {
+            no_results = true;
+            printf("\nTests in progress:\n");
+            // Display all the files in the directory
+            if (answers_file_count != 0){
+                for (int i = 0; i < answers_file_count; i++) {
+                    print_counter++;
+                    printf("%d: Resume unfinished test from %s\n", print_counter,change_date_format(answer_files[i].name));
+                }
+            }
         }
 
-        printf("\nChoose a save to use or take a new test (666)\n>");
+        printf("\nChoose an action or take a new test (666)\n>");
         bool valid_input = false;
         int file_number;
         do {
             file_number = read_only_integer(&valid_input);
-        } while (!valid_input || file_number <= 0 || file_number > file_count && file_number != 666);
+        } while (!valid_input || file_number <= 0 || file_number > answers_file_count && file_number != 666);
 
         //Create path for file for answers for current user
         answers_path = (char*)malloc(PATH_MAX);
@@ -62,9 +125,41 @@ void Load_profile(){
 
         if (file_number == 666){
             snprintf(answers_path, PATH_MAX, "%s/%s.csv", dir_answers_path, the_time);
+            *do_questionnaire = true;
         }
-        else {
-            snprintf(answers_path, PATH_MAX, "%s/%s.csv", dir_answers_path, files[file_number - 1].name);
+        else{
+            if (no_results == false){
+                if (file_number > results_file_count){
+                    int num_retrieve = (file_number - results_file_count);
+
+                    for (int i = 0; i < answers_file_count; i++) {
+                        if (answer_files[i].number == -num_retrieve) {
+                            snprintf(answers_path, PATH_MAX, "%s/%s.csv", dir_answers_path, answer_files[i].name);
+                            *do_questionnaire = true;
+                            break;
+                        }
+                    }
+                }
+                else{
+                    result_path = (char*)malloc(PATH_MAX);
+                    if (!result_path) {
+                        fprintf(stderr, "Error allocating memory for result_path.\n");
+                    }
+                    snprintf(result_path, PATH_MAX, "%s/%s.csv", dir_results_path, result_files[file_number - 1].name);
+
+                    *do_questionnaire = false;
+                }
+            }
+            if (no_results == true){
+                answers_path = (char*)malloc(PATH_MAX);
+                if (!answers_path) {
+                    fprintf(stderr, "Error allocating memory for answers_path.\n");
+                }
+                printf("\n This is the string: %s\n", answer_files[file_number - 1].name);
+                snprintf(answers_path, PATH_MAX, "%s/%s.csv", dir_answers_path, answer_files[file_number - 1].name);
+
+                *do_questionnaire = true;
+            }
         }
     }
     else {
@@ -76,7 +171,7 @@ void Load_profile(){
             fprintf(stderr, "Error allocating memory for answers_path.\n");
         }
         snprintf(answers_path, PATH_MAX, "%s/%s.csv", dir_answers_path, the_time);
-
+        *do_questionnaire = true;
     }
 }
 
@@ -140,9 +235,39 @@ void scan_file_names(const char *dir_path, file_names *files, int *file_count) {
 
                 (*file_count)++;
             }
-            // You can add more conditions for other types like directories, symbolic links, etc.
         }
     }
 
     closedir(dir);
+}
+
+char* change_date_format(char *dateString) {
+
+    int year, month, day, hour, minute, second;
+
+    char *formattedDate = (char *)malloc(50);
+
+    // Read and create readable date
+    if (sscanf(dateString, "%d-%d-%d-%d-%d-%d", &year, &month, &day, &hour, &minute, &second) == 6) {
+        // Format the result
+        sprintf(formattedDate, "%02d:%02d, %d %s %d", hour, minute, day,
+                (month == 1) ? "January" :
+                (month == 2) ? "February" :
+                (month == 3) ? "March" :
+                (month == 4) ? "April" :
+                (month == 5) ? "May" :
+                (month == 6) ? "June" :
+                (month == 7) ? "July" :
+                (month == 8) ? "August" :
+                (month == 9) ? "September" :
+                (month == 10) ? "October" :
+                (month == 11) ? "November" :
+                (month == 12) ? "December" : "Invalid month",
+                year);
+
+        return formattedDate;
+    } else {
+        printf("Invalid date format\n");
+        return NULL;
+    }
 }

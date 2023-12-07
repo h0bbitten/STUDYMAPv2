@@ -21,7 +21,6 @@ char* result_path;
 
 void knn() {
 
-
     file_names files[MAX_FILES];
     int file_count = 0;
 
@@ -60,12 +59,10 @@ void knn() {
     //Sorts the distances smallest values first
     qsort(KnnTrainingPoint, file_count, sizeof(KnnDataPoints), smallest_value);
 
-    //Top k nearest neighbors to return
-    int k = 3;
 
     //Displays results to user, probably should be moved from the KNN function
-    printf("Top %d recommended educations for %s;\n\n", k, current_user.username);
-    for (int i = 0; i < k; i++) {
+    printf("Top %d recommended educations for %s;\n\n", file_count, current_user.username);
+    for (int i = 0; i < file_count; i++) {
         printf("%s: %f\n", KnnTrainingPoint[i].name, KnnTrainingPoint[i].result);
     }
 
@@ -101,7 +98,7 @@ void knn() {
     }
 
     //Write top k results to file
-    for (int i = 0; i < k; i++) {
+    for (int i = 0; i < file_count; i++) {
         fprintf(Result, "%s,%f\n", KnnTrainingPoint[i].name, KnnTrainingPoint[i].result);
     }
 
