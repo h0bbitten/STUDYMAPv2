@@ -45,10 +45,7 @@ void hash(char *str, unsigned int *result) {
     }
 }
 
-
-
-void login()
-{
+void login() {
     //Creates a user of the type struct Logins and inputs the current user into it
     current_user = load_user();
     unsigned int hashed_password;
@@ -56,6 +53,7 @@ void login()
     //debug line
     printf("Username: %s, Password:  %u, CPR: %s",current_user.username, hashed_password, current_user.cpr);
 }
+
 
 Logins load_user()
 {
@@ -68,49 +66,57 @@ Logins load_user()
     make_directory("Databases/Users");
 
 
+
+Logins load_user() {
+
     //Creates a variable for a FILE, adds a YES/NO char for user interaction and adds a temporary user,
     //which is used for output
     FILE *Users;
-    char y_n;
+    char login_signup;
     Logins this_user;
 
     //Checks if a Users file exists and creates one if one doesn't exist
     Users = fopen(users_path, "r");
-    if(Users == NULL)
-    {
+    if (Users == NULL) {
         Users = fopen(users_path, "w");
         fclose(Users);
 
         Users = fopen(users_path, "r");
     }
-    y_n = login_or_signup();
+    login_signup = login_or_signup();
 
-    if(y_n == 'S' || y_n == 's')
-    {
+    if (login_signup == 'S' || login_signup == 's') {
         //If the user sign_up, then we need to add a new user to our database(Users.csv)
 
         //This opens the csv file Users in the "r" (read) mode
         Users = fopen(users_path, "r");
         //Error case: checks if the file is opened correctly
-        if(Users == NULL)
-        {
+        if (Users == NULL) {
             printf("Error: File not found.\n");
             exit(1);
         }
 
         int usernameExists;
+
         do {
-            printf("Please enter a username that is no longer than %d characters\n>", USERNAME_MAX_LENGTH);
-            scanf("%s", this_user.username);
+            bool correct_username = false;
+            do {
+                printf("Please enter a username (Min. %d characters & Max. %d characters)\n>", USERNAME_MIN_LENGTH, USERNAME_MAX_LENGTH);
+                scanf("%s", this_user.username);
+
+                if (strlen(this_user.username) < USERNAME_MIN_LENGTH){
+                    printf("The entered username must be at least 5 characters. Try again.\n");
+                } else {
+                    correct_username = true;
+                }
+            } while (correct_username == false);
 
             char line[MAX_LINE_LENGTH];
             usernameExists = 0;
 
-            // Rewind the file to the beginning
             rewind(Users);
 
             while (fgets(line, sizeof(line), Users) != NULL) {
-                // strtok modifies the input string, so create a copy to avoid side effects
                 char tempLine[MAX_LINE_LENGTH];
                 strcpy(tempLine, line);
 
@@ -120,40 +126,46 @@ Logins load_user()
                     printf("Username already exists. Please choose a different username.\n");
                     break;
                 }
-
             }
-
         } while (usernameExists);
 
         fclose(Users);
 
         unsigned int hashed_password;
 
-        printf("Please enter a password that is no longer than %d characters\n>", PASSWORD_MAX_LENGTH);
-        scanf("%s", this_user.password);
+        bool correct_password = false;
+        do {
+            printf("Please enter a password (Min. %d characters & Max. %d characters)\n>", PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH);
+            scanf("%s", this_user.password);
 
-        //fprintf(Users, "%s,%s,\n", this_user.username, this_user.password);
+            if (strlen(this_user.password) < PASSWORD_MIN_LENGTH){
+                printf("The entered password must be at least 8 characters. Try again.\n");
+            } else {
+                correct_password = true;
+            }
+        } while (correct_password == false);
+
 
         bool correct_cpr = false;
         do {
-            printf("Please enter your CPR-number\n>");
+            printf("Please enter your CPR-number.\n>");
             scanf("%s", this_user.cpr);
-            
-            if (strlen(this_user.cpr) != CPR_MAX_LENGTH){
+
+            if (strlen(this_user.cpr) != CPR_MAX_LENGTH) {
                 printf("The entered CPR-number is not the correct length. Try again.\n");
             } else {
                 correct_cpr = true;
             }
-        } while(correct_cpr == false);
+        } while (correct_cpr == false);
 
         //This opens the csv file Users in the "a" (append) mode
         Users = fopen(users_path, "a");
         //Error case: checks if the file is opened correctly
-        if(Users == NULL)
-        {
+        if (Users == NULL) {
             printf("Error: File not found.\n");
             exit(1);
         }
+
         hash(this_user.password, &hashed_password);
 
         fprintf(Users, "%s,%u,%s\n", this_user.username, hashed_password, this_user.cpr);
@@ -162,7 +174,8 @@ Logins load_user()
         return this_user;
 
     }
-    if (y_n == 'L' || y_n == 'l') {
+
+    if (login_signup == 'L' || login_signup == 'l') {
         bool found_username = false;
         bool found_password = false;
         unsigned int hashed_password;
@@ -193,19 +206,17 @@ Logins load_user()
 
             if (found_username == false) {
                 printf("Username not found. Please try again.\n");
-            }
-            else if (found_password == false) {
+            } else if (found_password == false) {
                 printf("Invalid password. Please try again.\n");
-            }
-            else{
+            } else {
                 return this_user;
             }
         } while (1); // Loop indtil der er et login der passer
-
-
     }
 }
+
 char login_or_signup()
+
 {
     char input;
     do {
