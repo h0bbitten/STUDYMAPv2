@@ -1,5 +1,6 @@
-#include "questionnaire.h"
 #include "data_collection.h"
+#include "load_profile.h"
+#include "questionnaire.h"
 #include "KNN.h"
 
 #include <stdio.h>
@@ -13,19 +14,41 @@
 
 char* answers_path;
 char* datast_path = {"Databases/datast.csv"};
+char* edu_data_dir_path = {"Databases/Edu_data"};
 char* result_path;
 
 
 
 void knn() {
 
-    KnnDataPoints KnnTrainingPoint[NUM_EDU];
+
+    file_names files[MAX_FILES];
+    int file_count = 0;
+
+    // Scan file names and assign a number to each file
+    scan_file_names(edu_data_dir_path, files, &file_count);
+
+    KnnDataPoints KnnTrainingPoint[file_count];
+
+
+    // Display all the files in the directory
+    for (int i = 0; i < file_count; i++) {
+        KnnTrainingPoint[i].name = strdup(files[i].name);
+        char data_path[PATH_MAX];
+
+        snprintf(data_path, sizeof(files[MAX_FILES]), "Databases/Edu_data/%s.csv", KnnTrainingPoint[i].name);
+
+        FILE* data_file = fopen(data_path, "r");
+        parse_data(data_file, &KnnTrainingPoint[i]);
+        fclose(data_file);
+    }
 
     FILE* datast;
     datast = fopen(datast_path, "r");
 
+
     //Parse data from datast to KNN
-    for (int i = 0; i < NUM_EDU; ++i) {
+    for (int i = 0; i < file_count; ++i) {
         parse_data(datast, &KnnTrainingPoint[i]);
     }
 
@@ -34,7 +57,6 @@ void knn() {
 
     FILE* answer;
     answer = fopen(answers_path, "r");
-    //answer = fopen("Databases/Answers/Q.csv", "r");
 
     KnnDataPoints KnnUserPoint;
     //Parse data from current users answers to KNN
@@ -43,18 +65,18 @@ void knn() {
     fclose(answer);
 
     //Calculate distance between all educations and answers
-    for (int i = 0; i < NUM_EDU; i++) {
+    for (int i = 0; i < file_count; i++) {
         KnnTrainingPoint[i].result = Euclidean_distance(KnnTrainingPoint[i], KnnUserPoint);
     }
 
     //Sorts the distances smallest values first
-    qsort(KnnTrainingPoint, NUM_EDU, sizeof(KnnDataPoints), smallest_value);
+    qsort(KnnTrainingPoint, file_count, sizeof(KnnDataPoints), smallest_value);
 
     //Top k nearest neighbors to return
     int k = 3;
 
     //Displays results to user, probably should be moved from the KNN function
-    printf("Top %d recommended educations for %s;\n\n", k, KnnUserPoint.name);
+    printf("Top %d recommended educations for %s;\n\n", k, current_user.username);
     for (int i = 0; i < k; i++) {
         printf("%s: %f\n", KnnTrainingPoint[i].name, KnnTrainingPoint[i].result);
     }
@@ -68,7 +90,7 @@ void knn() {
     if (!dir_results_path) {
         fprintf(stderr, "Error allocating memory for dir_results_path.\n");
     }
-    snprintf(dir_results_path, PATH_MAX, "Databases/Results/%s", KnnUserPoint.name);
+    snprintf(dir_results_path, PATH_MAX, "Databases/Results/%s", current_user.username);
 
     //Create directory for results for current user
     make_directory(dir_results_path);
@@ -98,10 +120,10 @@ void knn() {
     fclose(Result);
 
     // Clean up allocated memory
-    for (int i = 0; i < NUM_EDU; i++) {
+    for (int i = 0; i < file_count; i++) {
         cleanup(&KnnTrainingPoint[i]);
     }
-    cleanup(&KnnUserPoint);
+
 }
 
 void parse_data(FILE* data_stream, KnnDataPoints* KnnDataPoint) {
@@ -123,15 +145,7 @@ void parse_data(FILE* data_stream, KnnDataPoints* KnnDataPoint) {
             break;  // Stop when reaching "done"
         }
 
-        // The first token is the name
-        if (index == 0) {
-            KnnDataPoint->name = malloc(strlen(token) + 1);  // +1 for the null terminator
-            if (KnnDataPoint->name != NULL) {
-                strcpy(KnnDataPoint->name, token);
-                token = strtok(NULL, ",");
-                token = strtok(NULL, ",");
-            }
-        } else if (index % 2 == 1) {
+        if (index % 2 == 1) {
             // Process only numeric answers and skip non-numeric values
             if (isdigit(token[0])) {
                 KnnDataPoint->answers[(index - 1) / 2] = atoi(token);

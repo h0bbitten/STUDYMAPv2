@@ -34,7 +34,7 @@ void Load_profile(){
         printf("\nDirectory exists!!!!!!!.\n\n");
 
         // Array to store numbered files
-        NumberedFile files[MAX_FILES];
+        file_names files[MAX_FILES];
         int file_count = 0;
 
         // Scan file names and assign a number to each file
@@ -96,7 +96,7 @@ int directory_exists(const char *path) {
         return 0;
     }
 }
-void scan_file_names(const char *dir_path, NumberedFile *files, int *file_count) {
+void scan_file_names(const char *dir_path, file_names *files, int *file_count) {
     DIR *dir = opendir(dir_path);
 
     if (dir == NULL) {
