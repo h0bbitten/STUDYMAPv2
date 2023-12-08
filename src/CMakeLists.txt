@@ -8,5 +8,7 @@ target_include_directories(questionnaire PUBLIC .)
 
 add_executable(STUDYMAP STUDYMAP.c KNN.c)
 
+set_target_properties(STUDYMAP PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
+
 target_link_libraries(questionnaire data_collection load_profile)
 target_link_libraries(STUDYMAP data_collection questionnaire load_profile m)
