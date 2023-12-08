@@ -119,6 +119,7 @@ void Load_profile(bool* do_questionnaire){
             *do_questionnaire = true;
         }
         else if (what_do <= results_file_count){
+            //Create path for file for results for current user
             result_path = (char*)malloc(PATH_MAX);
             if (!result_path) {
                 fprintf(stderr, "Error allocating memory for result_path.\n");

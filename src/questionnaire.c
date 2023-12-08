@@ -179,6 +179,12 @@ bool check_in_progress(char *file_path) {
     // Check if the file is empty
     if (fgetc(file) == EOF) {
         fclose(file);
+
+        // Delete the file if it's empty
+        if (remove(file_path) != 0) {
+            fprintf(stderr, "Error deleting empty file");
+        }
+
         return false;
     }
 
