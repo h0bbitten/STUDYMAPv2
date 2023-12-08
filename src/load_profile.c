@@ -37,134 +37,62 @@ void Load_profile(bool* do_questionnaire){
     }
     snprintf(dir_results_path, PATH_MAX, "Databases/Results/%s", current_user.username);
 
-    bool no_results;
-    //Check if the directory already exists
-    if (directory_exists(dir_answers_path)) {
-        // Array to store numbered answer files
-        file_names answer_files[MAX_FILES];
-        int answers_file_count = 0;
+    // Array of struct to store numbered results files
+    file_names answer_files[MAX_FILES];
+    int answers_file_count = 0;
 
-        // Scan file names and assign a number to each file
-        scan_file_names(dir_answers_path, answer_files, &answers_file_count);
+    // Scan file names and assign a number to each file
+    scan_file_names(dir_answers_path, answer_files, &answers_file_count);
 
-        // Array to store numbered results files
-        file_names result_files[MAX_FILES];
+    // Array of struct to store numbered results files
+    file_names result_files[MAX_FILES];
 
-        int print_counter = 0;
+    int print_counter = 0;
 
-        int results_file_count = 0;
-
-        if (directory_exists(dir_results_path)) {
-            no_results = false;
-
-            // Scan file names and assign a number to each file
-            scan_file_names(dir_results_path, result_files, &results_file_count);
-
-            printf("\nPreviously saved results:\n");
-            // Display all the files in the directory
-            for (int i = 0; i < results_file_count; i++) {
-                print_counter++;
-                printf("%d: View results from test taken on %s\n", print_counter, change_date_format(result_files[i].name));
-            }
+    int results_file_count = 0;
 
 
-            if (answers_file_count > results_file_count) {
-                int temp_results_file_count = results_file_count;
-                int index = 0;
+    // Scan file names and assign a number to each file
+    scan_file_names(dir_results_path, result_files, &results_file_count);
 
-                for (int i = 0; i < answers_file_count; i++) {
-
-                    // Allocate memory for temp_path
-                    char* temp_path = (char*)malloc(PATH_MAX);
-                    if (temp_path == NULL) {
-                        fprintf(stderr, "Memory allocation failed for temp_path\n");
-                        break;
-                    }
-
-                    snprintf(temp_path, PATH_MAX, "%s/%s.csv", dir_answers_path, answer_files[i].name);
-                    bool in_progress = check_in_progress(temp_path);
-                    if (in_progress == true){
-                        if (temp_results_file_count == results_file_count) printf("\nTests in progress:\n");
-                        temp_results_file_count++;
-                        index++;
-                        answer_files[i].number = 0;
-                        answer_files[i].number -= index;
-                        print_counter++;
-                        printf("%d: Resume unfinished test from %s\n", print_counter,change_date_format(answer_files[i].name));
-                    }
-                    free(temp_path);
-                }
-
-            }
-
-        }
-        else {
-            no_results = true;
-            printf("\nTests in progress:\n");
-            // Display all the files in the directory
-            if (answers_file_count != 0){
-                for (int i = 0; i < answers_file_count; i++) {
-                    print_counter++;
-                    printf("%d: Resume unfinished test from %s\n", print_counter,change_date_format(answer_files[i].name));
-                }
-            }
-        }
-
-        printf("\nChoose an action or take a new test (666)\n>");
-        bool valid_input = false;
-        int file_number;
-        do {
-            file_number = read_only_integer(&valid_input);
-        } while (!valid_input || file_number <= 0 || file_number > answers_file_count && file_number != 666);
-
-        //Create path for file for answers for current user
-        answers_path = (char*)malloc(PATH_MAX);
-        if (!answers_path) {
-            fprintf(stderr, "Error allocating memory for answers_path.\n");
-        }
-
-        if (file_number == 666){
-            snprintf(answers_path, PATH_MAX, "%s/%s.csv", dir_answers_path, the_time);
-            *do_questionnaire = true;
-        }
-        else{
-            if (no_results == false){
-                if (file_number > results_file_count){
-                    int num_retrieve = (file_number - results_file_count);
-
-                    for (int i = 0; i < answers_file_count; i++) {
-                        if (answer_files[i].number == -num_retrieve) {
-                            snprintf(answers_path, PATH_MAX, "%s/%s.csv", dir_answers_path, answer_files[i].name);
-                            *do_questionnaire = true;
-                            break;
-                        }
-                    }
-                }
-                else{
-                    result_path = (char*)malloc(PATH_MAX);
-                    if (!result_path) {
-                        fprintf(stderr, "Error allocating memory for result_path.\n");
-                    }
-                    snprintf(result_path, PATH_MAX, "%s/%s.csv", dir_results_path, result_files[file_number - 1].name);
-
-                    *do_questionnaire = false;
-                }
-            }
-            if (no_results == true){
-                answers_path = (char*)malloc(PATH_MAX);
-                if (!answers_path) {
-                    fprintf(stderr, "Error allocating memory for answers_path.\n");
-                }
-                printf("\n This is the string: %s\n", answer_files[file_number - 1].name);
-                snprintf(answers_path, PATH_MAX, "%s/%s.csv", dir_answers_path, answer_files[file_number - 1].name);
-
-                *do_questionnaire = true;
-            }
+    if (results_file_count > 0) {
+        printf("\nPreviously saved results:\n");
+        // Display all the files in the directory
+        for (int i = 0; i < results_file_count; i++) {
+            print_counter++;
+            printf("%d: View results from test taken on %s\n", print_counter, change_date_format(result_files[i].name));
         }
     }
-    else {
-        printf("\nDirectory does not exist!!!!!!!!!!.\n\n");
 
+    int temp_results_file_count = results_file_count;
+    int index = 0;
+
+    if (answers_file_count > 0){
+        for (int i = 0; i < answers_file_count; i++) {
+
+            // Allocate memory for temp_path
+            char* temp_path = (char*)malloc(PATH_MAX);
+            if (temp_path == NULL) {
+                fprintf(stderr, "Memory allocation failed for temp_path\n");
+                break;
+            }
+
+            snprintf(temp_path, PATH_MAX, "%s/%s.csv", dir_answers_path, answer_files[i].name);
+            bool in_progress = check_in_progress(temp_path);
+            if (in_progress == true){
+                if (temp_results_file_count == results_file_count) printf("\nTests in progress:\n");
+                temp_results_file_count++;
+                index++;
+                answer_files[i].number = 0;
+                answer_files[i].number -= index;
+                print_counter++;
+                printf("%d: Resume unfinished test from %s\n", print_counter,change_date_format(answer_files[i].name));
+            }
+            free(temp_path);
+        }
+    }
+
+    if (print_counter == 0){
         //Create path for file for answers for current user
         answers_path = (char*)malloc(PATH_MAX);
         if (!answers_path) {
@@ -173,25 +101,50 @@ void Load_profile(bool* do_questionnaire){
         snprintf(answers_path, PATH_MAX, "%s/%s.csv", dir_answers_path, the_time);
         *do_questionnaire = true;
     }
-}
+    else{
+        printf("\nChoose an action or take a new test (666)\n>");
+        bool valid_input = false;
+        int what_do;
+        do {
+            what_do = read_only_integer(&valid_input);
+        } while (!valid_input || what_do <= 0 || what_do > print_counter && what_do != 666);  // Rewrite this
 
+        if (what_do == 666){
+            //Create path for file for answers for current user
+            answers_path = (char*)malloc(PATH_MAX);
+            if (!answers_path) {
+                fprintf(stderr, "Error allocating memory for answers_path.\n");
+            }
+            snprintf(answers_path, PATH_MAX, "%s/%s.csv", dir_answers_path, the_time);
+            *do_questionnaire = true;
+        }
+        else if (what_do <= results_file_count){
+            result_path = (char*)malloc(PATH_MAX);
+            if (!result_path) {
+                fprintf(stderr, "Error allocating memory for result_path.\n");
+            }
+            snprintf(result_path, PATH_MAX, "%s/%s.csv", dir_results_path, result_files[what_do - 1].name);
 
-
-int directory_exists(const char *path) {
-    struct stat info;
-
-    if (stat(path, &info) != 0) {
-        // Error accessing file/directory
-        //fprintf(stderr, "Error accessing file/directory for: %s", path);
-        return 0;
-    } else if (info.st_mode & S_IFDIR) {
-        // It's a directory
-        return 1;
-    } else {
-        // It's not a directory
-        return 0;
+            *do_questionnaire = false;
+        }
+        else{
+            int num_retrieve = (what_do - results_file_count);
+            //Create path for file for answers for current user
+            answers_path = (char*)malloc(PATH_MAX);
+            if (!answers_path) {
+                fprintf(stderr, "Error allocating memory for answers_path.\n");
+            }
+            for (int i = 0; i < answers_file_count; i++) {
+                if (answer_files[i].number == -num_retrieve) {
+                    snprintf(answers_path, PATH_MAX, "%s/%s.csv", dir_answers_path, answer_files[i].name);
+                    *do_questionnaire = true;
+                    break;
+                }
+            }
+        }
     }
 }
+
 void scan_file_names(const char *dir_path, file_names *files, int *file_count) {
     DIR *dir = opendir(dir_path);
 
