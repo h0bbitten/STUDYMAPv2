@@ -4,6 +4,7 @@
 #include "load_profile.h"
 #include "questionnaire.h"
 #include "KNN.h"
+#include "Results.h"
 
 #include <math.h>
 
@@ -31,7 +32,6 @@ int main() {
     //Plot_result(...)
     //Calculate_distance(...)
 
-    //Display_result(...) - Frederik!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     //Change number of recommendations or decide a different action
     //Results(...)
@@ -40,6 +40,7 @@ int main() {
     //***NO***
     //Saved_results(...)
     knn();
+    Display_results();
 
 return 0;
 }
