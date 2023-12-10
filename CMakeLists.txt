@@ -8,3 +8,5 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/Build)
 
 
 add_subdirectory(src)
+enable_testing()
+add_subdirectory(test)
