@@ -101,6 +101,8 @@ void Load_profile(bool* do_questionnaire){
         }
         snprintf(answers_path, PATH_MAX, "%s/%s.csv", dir_answers_path, the_time);
         *do_questionnaire = true;
+
+        printf("\nNo saved test found\n");
     }
     else{
 
@@ -120,7 +122,7 @@ void Load_profile(bool* do_questionnaire){
         } while ((input == NULL || input[0] == '\0' || (number <= 0 || number > print_counter)) && (input == NULL || strcmp(input, "n") != 0) && (input == NULL || strcmp(input, "N") != 0));
 
 
-        if (strcmp(input, "n") != 0 || strcmp(input, "N") != 0){
+        if (strcmp(input, "n") == 0 || strcmp(input, "N") == 0){
             //Create path for file for answers for current user
             answers_path = (char*)malloc(PATH_MAX);
             if (!answers_path) {
