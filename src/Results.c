@@ -43,7 +43,7 @@ void Display_results() {
 
     //filter_results(result);
 
-    int k = 3;
+    int k = 8;
 
     printf("These are the top %d recommended results for %s:\n\n", k, current_user.username);
     print_results(result, education, k);
@@ -113,10 +113,15 @@ void read_edu_data(char* file_path, educations education[8]) {
 }
 void print_results(results result[8], educations education[8], int num_to_print) {
 
+    double ref_distance = 27.0;
+
     for (int i = 0; i < num_to_print; i++) {
         for (int j = 0; j < file_count; j++) {
             if (strcmp(result[i].name, education[j].name) == 0) {
-                printf("%s: %s\n\n", result[i].name, education[j].description);
+
+                double percentage = ((1 - (result[i].value / ref_distance)) * 100);
+
+                printf("%s %.2f%% match:\n%s\n", result[i].name, percentage, education[j].description);
             }
         }
     }
