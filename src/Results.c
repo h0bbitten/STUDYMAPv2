@@ -11,12 +11,13 @@ typedef struct {
 
 } results;
 
-
 typedef struct {
     char* name;
     char* description;
 
 } educations;
+
+int file_count;
 
 void read_results(char* file_path, results* result);
 
@@ -35,7 +36,7 @@ void Display_results() {
 
     results result[8];
 
-    educations educationEd];
+    educations education[8];
 
     read_results(result_path, &result[8]);
 
