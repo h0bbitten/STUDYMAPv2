@@ -35,7 +35,7 @@ void knn() {
         KnnTrainingPoint[i].name = strdup(files[i].name);
         char data_path[PATH_MAX];
 
-        snprintf(data_path, sizeof(files[MAX_FILES]), "Databases/Edu_data/%s.csv", KnnTrainingPoint[i].name);
+        snprintf(data_path, sizeof(data_path), "Databases/Edu_data/%s.csv", KnnTrainingPoint[i].name);
 
         FILE* data_file = fopen(data_path, "r");
         parse_data(data_file, &KnnTrainingPoint[i]);
@@ -151,7 +151,7 @@ double Euclidean_distance(KnnDataPoints KnnTrainingPoint, KnnDataPoints KnnUserP
 
     //Calculates a part of Euclidean's distance formula for each answer
     double distance = 0.0;
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < NUM_ANSWER; i++) {
         distance += pow(KnnUserPoint.answers[i] - KnnTrainingPoint.answers[i], 2);
     }
     //Returns the completely calculated result for all answers
