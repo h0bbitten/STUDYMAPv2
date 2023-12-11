@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #define NUM_EDU 8
 #define NUM_ANSWER 9
 
