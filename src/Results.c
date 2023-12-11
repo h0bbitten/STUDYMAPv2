@@ -25,7 +25,7 @@ void read_results(char* file_path, results result[8]);
 
 void read_edu_data(char* file_path, educations education[8]);
 
-void filter_results(results result[8]);
+void filter_results(results result[8], educations education[8]);
 
 void print_results(results result[8], educations education[8], int num_to_print);
 
@@ -41,7 +41,7 @@ void Display_results() {
 
     read_edu_data(edu_data, education);
 
-    //filter_results(result);
+    filter_results(result, education);
 
     int k = 8;
 
@@ -122,6 +122,46 @@ void print_results(results result[8], educations education[8], int num_to_print)
                 double percentage = ((1 - (result[i].value / ref_distance)) * 100);
 
                 printf("%s %.2f%% match:\n%s\n", result[i].name, percentage, education[j].description);
+            }
+        }
+    }
+}
+
+void read_user_data(char* file_path) {
+    FILE* file = fopen(file_path, "r");
+    if (file == NULL) {
+        fprintf(stderr, "Failed to open %s.\n", file_path);
+        exit(EXIT_FAILURE);
+    }
+
+    char line[MAX_LEN];
+    if (fgets(line, sizeof(line), file)) {
+        char* token = strtok(line, DELIMITER);
+        strcpy(current_user.username, token);
+
+        token = strtok(NULL, DELIMITER);
+        strcpy(current_user.password, token);
+
+        token = strtok(NULL, DELIMITER);
+        strcpy(current_user.cpr, token);
+
+        token = strtok(NULL, DELIMITER);
+        strcpy(current_user.requirements, token);
+    }
+
+    fclose(file);
+}
+
+
+void filter_results(results result[8], educations education[8]) {
+    for (int i = 0; i < file_count; i++) {
+        // Check if the education requires "Mat A"
+        if (strstr(education[i].description, "Mat A") != NULL) {
+            // Check if the user has "Mat B"
+            if (strstr(current_user.requirements, "Mat B") != NULL) {
+                // Filter out the result
+                printf("Filtering out result: %s\n", result[i].name);
+                result[i].value = -1.0;  // Placeholder for filtering
             }
         }
     }
