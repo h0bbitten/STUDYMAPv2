@@ -130,7 +130,7 @@ void print_results(results result[8], educations education[8], int num_to_print)
 
                 double percentage = ((1 - (result[i].value / ref_distance)) * 100);
 
-                printf("%s %.2f%% match:\n%s\nTo see more check out: %s\n\n", result[i].name, percentage, education[j].description, education[j].link);
+                printf("%s (%.2f%% match):\n%s\nTo see more check out: %s\n\n", result[i].name, percentage, education[j].description, education[j].link);
             }
         }
     }
