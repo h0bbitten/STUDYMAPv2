@@ -44,9 +44,13 @@ return 0;
 
 TODO
  Filter results!!!
- Change options for new test (not "666")     -       check
- Loop for whole program           -       check
- Options after displaying result (logout, new test, delete result, exit program, show more results, choose other save)      -       check
+ Do read_results                                      -       done
+ Do read_edu                                          -       done
+ Do print_results                                     -       done
+ Calculate match compatibility                        -       done
+ Change options for new test (not "666")              -       done
+ Loop for whole program                               -       done
+ Options after displaying result (logout, new test, delete result, exit program, show more results, choose other save)      -       done
  Write description for each education
  Add more educations?
  Make results dynamic - not static using magic numbers
