@@ -5,8 +5,6 @@
 #define MAX_LINE_SIZE 112
 
 typedef struct {
-    char username[50];
-    char password[50];
     char cprNumber[11];
 } UserData;
 //Opens Users.csv in read-mode
