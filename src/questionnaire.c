@@ -48,8 +48,16 @@ void Questionnaire(){
     }
     //If it is in progress then do the questionnaire from where the user left of
     else if (in_progress == true) {
-
         printf("\nUnfinished test found!\nContinuing previous questionnaire\n");
+
+        //Update name/date of file
+        char* new_name = (char*)malloc(PATH_MAX);
+        if (!new_name) {
+            fprintf(stderr, "Error allocating memory for new_name.\n");
+        }
+        snprintf(new_name, PATH_MAX, "%s/%s.csv", dir_answers_path, the_time);
+        rename(answers_path, new_name);
+        strcpy(answers_path,new_name);
 
         // Get the id of the last question answered
         char* last_question_id = get_last_question_id(answers_path);
@@ -171,6 +179,12 @@ bool check_in_progress(char *file_path) {
     // Check if the file is empty
     if (fgetc(file) == EOF) {
         fclose(file);
+
+        // Delete the file if it's empty
+        if (remove(file_path) != 0) {
+            fprintf(stderr, "Error deleting empty file");
+        }
+
         return false;
     }
 
@@ -251,5 +265,6 @@ void get_date(char *formattedDate) {
     struct tm *localTime = localtime(&currentTime);
 
     // Format the date as "SS-MM-HH-dd-mm-yyyy" and store it in a string
-    strftime(formattedDate, 20, "%S-%M-%H-%d-%m-%Y", localTime);
+    strftime(formattedDate, 40, "%Y-%m-%d-%H-%M-%S", localTime);
+
 }

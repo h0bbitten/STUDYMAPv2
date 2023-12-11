@@ -4,7 +4,6 @@
 #include "load_profile.h"
 #include "questionnaire.h"
 #include "KNN.h"
-#include "Results.h"
 
 #include <math.h>
 
@@ -14,7 +13,8 @@ int main() {
     login();
     //Add_user(...)
     //***OR***
-    Load_profile();
+    bool do_questionnaire;
+    Load_profile(&do_questionnaire);
 
     //After getting the user profLile, the program will get the education data from a remote database
     //This is simulated by getting data from a csv file
@@ -23,15 +23,14 @@ int main() {
     //Is there previously saved results?
     //***YES***
     //The user can now either start a new test or load previous results
-    Questionnaire();
+    if(do_questionnaire == true){
+        Questionnaire();
+        knn();
+    }
 
-    //KNN algorithm(...) - SØREN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //Filter_results
 
-    //Process_data(...)
-    //Plot_educations(...)
-    //Plot_result(...)
-    //Calculate_distance(...)
-
+    //Display_result(...) - Frederik!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     //Change number of recommendations or decide a different action
     //Results(...)
@@ -39,8 +38,6 @@ int main() {
 
     //***NO***
     //Saved_results(...)
-    knn();
-    Display_results();
 
 return 0;
 }
