@@ -5,47 +5,76 @@
 #include "load_profile.h"
 #include "KNN.h"
 
+typedef struct {
+    char* name;
+    double value;
+
+} results;
+
+
+typedef struct {
+    char* name;
+    char* description;
+
+} educations;
+
+void read_results(char* file_path, results* result);
+
+void read_edu_data(char* file_path, educations education[8]);
+
+void filter_results(results* result);
+
+void display_results(results* result);
+
+
 void Display_results() {
-    char filename[] = "Uni.csv";
-    char search_term[MAX_LEN];
+    char edu_data[] = "Databases/Uni.csv";
 
 
+    int Edu_total = file_count;
 
-    // Call findText function with filename and search_term
-    findText(filename, search_term);
+    results result[8];
+
+    educations educationEd];
+
+    read_results(result_path, &result[8]);
+
+    read_edu_data(edu_data, &education[8]);
+
+    filter_results(&result[8]);
+
+    int k = 3;
+
+    for (int i = 0; i < k; i++) {
+        display_results(&result[k]);
+    }
+
 }
 
+void read_results(char* file_path, results* result){
 
-void findText(const char *filename, const char *search_term) {
 
     //kan filen åbne?
-    FILE *file = fopen(filename, "r");
+    FILE *file = fopen(file_path, "r");
     if (file == NULL) {
-        printf("Kunne ikke åbne %s.\n", filename);
+        printf("Kunne ikke åbne %s.\n", file_path);
         return;
     }
 
-    //læs top svar fra result_path og find dem i uni.csv
-    fprintf("%s", result_path);
-    result_path = search_term;
-
-
-
-
-    //få beskrivelse af uddannelser fra uni.csv udfra search_term
     char line[MAX_LEN];
+
     while (fgets(line, sizeof(line), file)) {
         char *token = strtok(line, DELIMITER);
-        if (token != NULL && strcmp(token, search_term) == 0) {
-            char *text = strtok(NULL, "\n");
-            if (text != NULL) {
-                printf("%s, %s\n", search_term, text);
-                fclose(file);
-                return;
+
+            if (token != NULL) {
+                strcpy(result->name, token);
+                token = strtok(line, DELIMITER);
+                if (token != NULL) {
+                    result->value = atoi(token);
+                    printf("%s, %f", result->name, result->value);
+                }
             }
-        }
     }
 
-    printf("ingen tekst fundet for '%s'.\n", search_term);
     fclose(file);
 }
