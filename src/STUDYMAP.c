@@ -49,6 +49,7 @@ void what_now(){
 
 
 
+    printf("\nChoose an option for what to do now\n");
 }
 
 
