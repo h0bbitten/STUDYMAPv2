@@ -2,38 +2,80 @@
 #include <stdlib.h>
 #include <string.h>
 #include "Results.h"
+#include "load_profile.h"
+#include "KNN.h"
+
+typedef struct {
+    char* name;
+    double value;
+
+} results;
+
+typedef struct {
+    char* name;
+    char* description;
+
+} educations;
+
+int file_count;
+
+void read_results(char* file_path, results* result);
+
+void read_edu_data(char* file_path, educations education[8]);
+
+void filter_results(results* result);
+
+void display_results(results* result);
+
 
 void Display_results() {
-    char filename[] = "Databases/Uni.csv";
-    char search_term[MAX_LEN];
+    char edu_data[] = "Databases/Uni.csv";
 
-    printf("Enter search term: \n");
-    scanf("%s", search_term);
 
-    // Call findText function with filename and search_term
-    findText(filename, search_term);
+    int Edu_total = file_count;
+
+    results result[8];
+
+    educations education[8];
+
+    read_results(result_path, &result[8]);
+
+    read_edu_data(edu_data, &education[8]);
+
+    filter_results(&result[8]);
+
+    int k = 3;
+
+    for (int i = 0; i < k; i++) {
+        display_results(&result[k]);
+    }
+
 }
 
-void findText(const char *filename, const char *search_term) {
-    FILE *file = fopen(filename, "r");
+void read_results(char* file_path, results* result){
+
+
+    //kan filen åbne?
+    FILE *file = fopen(file_path, "r");
     if (file == NULL) {
-        printf("Could not open %s.\n", filename);
+        printf("Kunne ikke åbne %s.\n", file_path);
         return;
     }
 
     char line[MAX_LEN];
+
     while (fgets(line, sizeof(line), file)) {
         char *token = strtok(line, DELIMITER);
-        if (token != NULL && strcmp(token, search_term) == 0) {
-            char *text = strtok(NULL, "\n");
-            if (text != NULL) {
-                printf("%s, %s\n", search_term, text);
-                fclose(file);
-                return;
+
+        if (token != NULL) {
+            strcpy(result->name, token);
+            token = strtok(line, DELIMITER);
+            if (token != NULL) {
+                result->value = atoi(token);
+                printf("%s, %f", result->name, result->value);
             }
         }
     }
 
-    printf("No text found for '%s'.\n", search_term);
     fclose(file);
 }

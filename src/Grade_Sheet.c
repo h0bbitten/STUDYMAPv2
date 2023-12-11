@@ -1,4 +1,7 @@
-// Grade_Sheet.c
+#include "questionnaire.h"
+#include "data_collection.h"
+#include "load_profile.h"
+#include "KNN.h"
 
 #include "Grade_Sheet.h"
 #include <stdio.h>

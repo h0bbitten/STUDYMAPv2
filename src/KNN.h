@@ -4,7 +4,7 @@
 #define NUM_ANSWER 9
 
 extern char* result_path;
-extern int file_count;
+
 
 typedef struct KnnDataPoints {
 

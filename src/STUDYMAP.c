@@ -1,66 +1,50 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "data_collection.h"
+#include "load_profile.h"
 #include "questionnaire.h"
-#include "Results.h"
 #include "KNN.h"
-#include <math.h>
+#include "Results.h"
+#include "Grade_Sheet.h"
 
 int main() {
-    //The program boots and the user is prompted to login with "MY-ID"
-    //Load_user(...)
+    // The program boots and the user is prompted to login with "MY-ID"
+    // Load_user(...)
     login();
-    /* TODO:
-     *  1. Unique username DOOOOOOOOOONE
-     *  2. Password hashing (Open SSL)
-     *  3. Tilføj "cpr-nummer" til bruger struct DOOOOOOOOONE
-    */
-    //Add_user(...)
-    //***OR***
-    //Load_profile(...)
+    // Add_user(...)
+    // ***OR***
+    bool do_questionnaire;
+    Load_profile(&do_questionnaire);
 
-    //After getting the user profile, the program will get the education data from a remote database
-    //This is simulated by getting data from a csv file
-    //Load_data(...)
+    // After getting the user profile, the program will get the education data from a remote database
+    // This is simulated by getting data from a CSV file
+    // Load_data(...)
 
-    /* TODO:
-     *  1. Mockup karakterblad ("CPR-nummer", karakter1...karakter_n, uddannelsested)
-     *  2. Hvis brugeren ikke har ungdomsuddannelse så lad bruger vælge en
-     *
-     */
+    // Is there previously saved results?
+    // ***YES***
+    // The user can now either start a new test or load previous results
+    if (do_questionnaire == true) {
+        Questionnaire();
+        knn();
+    }
 
+    // Create a UserGradeData structure with the necessary data
+    UserGradeData userGradeData;
+    // Assume you have the user's CPR, courses, grades, and levels here
 
-    //Is there previously saved results?
-    //***YES***
-    //The user can now either start a new test or load previous results
-    Questionnaire();
-    /* TODO:
-     *  1. Insert/update questions - Jonas!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-     *  2. Questionnaire progress
-     *  3. Dato og navn til questionnaire
-     *
-     *  */
+    // Provide the path to the education data CSV file
+    char eduDataPath[] = "path_to_edu_data.csv";  // Replace with the actual path
 
-    //KNN algorithm(...) - SØREN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    //Process_data(...)
-    //Plot_educations(...)
-    //Plot_result(...)
-    //Calculate_distance(...)
-
+    // Filter_results
+    compareGrades(userGradeData, eduDataPath);
     Display_results();
-    //Change number of recommendations or decide a different action
-    //Results(...)
-    //Saved_results(...)
 
-    //***NO***
-    //Saved_results(...)
-    knn();
+    // Change number of recommendations or decide a different action
+    // Results(...)
+    // Saved_results(...)
 
-return 0;
+    // ***NO***
+    // Saved_results(...)
+
+    return 0;
 }
-
-
-
-
-

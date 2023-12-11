@@ -20,7 +20,7 @@ char* result_path;
 void knn() {
 
     file_names files[MAX_FILES];
-    file_count = 0;
+    int file_count = 0;
 
     // Scan file names and assign a number to each file
     scan_file_names(edu_data_dir_path, files, &file_count);
@@ -56,6 +56,13 @@ void knn() {
 
     //Sorts the distances smallest values first
     qsort(KnnTrainingPoint, file_count, sizeof(KnnDataPoints), smallest_value);
+
+
+    //Displays results to user, probably should be moved from the KNN function
+    printf("Top %d recommended educations for %s;\n\n", file_count, current_user.username);
+    for (int i = 0; i < file_count; i++) {
+        printf("%s: %f\n", KnnTrainingPoint[i].name, KnnTrainingPoint[i].result);
+    }
 
     //Create directory for results
     make_directory("Databases/Results");
