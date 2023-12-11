@@ -14,6 +14,7 @@ typedef struct {
 
 typedef struct {
     char* name;
+    char* link;
     char* description;
 
 } educations;
@@ -43,7 +44,7 @@ void Display_results() {
 
     //filter_results(result);
 
-    int k = 8;
+    int k = 3;
 
     printf("These are the top %d recommended results for %s:\n\n", k, current_user.username);
     print_results(result, education, k);
@@ -52,6 +53,7 @@ void Display_results() {
     for (int i = 0; i < file_count; i++) {
         free(result[i].name);
         free(education[i].name);
+        free(education[i].link);
         free(education[i].description);
     }
 }
@@ -101,9 +103,16 @@ void read_edu_data(char* file_path, educations education[8]) {
 
             token = strtok(NULL, DELIMITER);
             if (token != NULL) {
-                education[count].description = malloc(strlen(token) + 1);
-                strcpy(education[count].description, token);
-                count++;
+                education[count].link = malloc(strlen(token) + 1);
+                strcpy(education[count].link, token);
+
+                token = strtok(NULL, DELIMITER);
+                if (token != NULL) {
+                    education[count].description = malloc(strlen(token) + 1);
+                    strcpy(education[count].description, token);
+
+                    count++;
+                }
             }
         }
     }
@@ -121,7 +130,7 @@ void print_results(results result[8], educations education[8], int num_to_print)
 
                 double percentage = ((1 - (result[i].value / ref_distance)) * 100);
 
-                printf("%s %.2f%% match:\n%s\n", result[i].name, percentage, education[j].description);
+                printf("%s %.2f%% match:\n%s\nTo see more check out: %s\n\n", result[i].name, percentage, education[j].description, education[j].link);
             }
         }
     }
