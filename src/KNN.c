@@ -16,11 +16,10 @@ char* answers_path;
 char* edu_data_dir_path = {"Databases/Edu_data"};
 char* result_path;
 
-
 void knn() {
 
     file_names files[MAX_FILES];
-    file_count = 0;
+    int file_count = 0;
 
     // Scan file names and assign a number to each file
     scan_file_names(edu_data_dir_path, files, &file_count);
