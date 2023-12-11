@@ -8,39 +8,47 @@
 
 #include <math.h>
 
+void what_now();
+
 int main() {
-    //The program boots and the user is prompted to login with "MY-ID"
-    //Load_user(...)
+
     login();
-    //Add_user(...)
-    //***OR***
+
     bool do_questionnaire;
     Load_profile(&do_questionnaire);
 
-    //After getting the user profLile, the program will get the education data from a remote database
-    //This is simulated by getting data from a csv file
-    //Load_data(...)
-
-    //Is there previously saved results?
-    //***YES***
-    //The user can now either start a new test or load previous results
     if(do_questionnaire == true){
         Questionnaire();
         knn();
     }
 
-    //Filter_results
-
     Display_results();
 
-    //Change number of recommendations or decide a different action
-    //Results(...)
-    //Saved_results(...)
-
-    //***NO***
-    //Saved_results(...)
+    what_now();
 
 return 0;
+}
+
+/*
+
+TODO
+ Filter results!!!
+ Change options for new test (not "666")     -       check
+ Loop for whole program
+ Options after displaying result (logout, new test, delete result, exit program, show more results, choose other save)
+ Write description for each education
+ Add more educations?
+ Make results dynamic - not static using magic numbers
+ Make functions same syntax, "example_function", not "ExampleFunction"
+ Fix user experience, what's written out to the user
+ Clean up code, remove unused stuff, don't break the program
+ IDK, something else
+ */
+
+void what_now(){
+
+
+
 }
 
 
