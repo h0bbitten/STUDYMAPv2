@@ -13,17 +13,14 @@
 
 
 char* answers_path;
-char* datast_path = {"Databases/datast.csv"};
 char* edu_data_dir_path = {"Databases/Edu_data"};
 char* result_path;
 
 
-
 void knn() {
 
-
     file_names files[MAX_FILES];
-    int file_count = 0;
+    file_count = 0;
 
     // Scan file names and assign a number to each file
     scan_file_names(edu_data_dir_path, files, &file_count);
@@ -36,7 +33,7 @@ void knn() {
         KnnTrainingPoint[i].name = strdup(files[i].name);
         char data_path[PATH_MAX];
 
-        snprintf(data_path, sizeof(files[MAX_FILES]), "Databases/Edu_data/%s.csv", KnnTrainingPoint[i].name);
+        snprintf(data_path, sizeof(data_path), "Databases/Edu_data/%s.csv", KnnTrainingPoint[i].name);
 
         FILE* data_file = fopen(data_path, "r");
         parse_data(data_file, &KnnTrainingPoint[i]);
@@ -59,15 +56,6 @@ void knn() {
 
     //Sorts the distances smallest values first
     qsort(KnnTrainingPoint, file_count, sizeof(KnnDataPoints), smallest_value);
-
-    //Top k nearest neighbors to return
-    int k = 3;
-
-    //Displays results to user, probably should be moved from the KNN function
-    printf("Top %d recommended educations for %s;\n\n", k, current_user.username);
-    for (int i = 0; i < k; i++) {
-        printf("%s: %f\n", KnnTrainingPoint[i].name, KnnTrainingPoint[i].result);
-    }
 
     //Create directory for results
     make_directory("Databases/Results");
@@ -101,7 +89,7 @@ void knn() {
     }
 
     //Write top k results to file
-    for (int i = 0; i < k; i++) {
+    for (int i = 0; i < file_count; i++) {
         fprintf(Result, "%s,%f\n", KnnTrainingPoint[i].name, KnnTrainingPoint[i].result);
     }
 
@@ -154,7 +142,7 @@ double Euclidean_distance(KnnDataPoints KnnTrainingPoint, KnnDataPoints KnnUserP
 
     //Calculates a part of Euclidean's distance formula for each answer
     double distance = 0.0;
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < NUM_ANSWER; i++) {
         distance += pow(KnnUserPoint.answers[i] - KnnTrainingPoint.answers[i], 2);
     }
     //Returns the completely calculated result for all answers
