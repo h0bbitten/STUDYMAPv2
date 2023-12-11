@@ -53,6 +53,6 @@ int SearchCPR() {
     return 0;
 }
 
-int main() {
+void gradesheet() {
     return SearchCPR();
 }

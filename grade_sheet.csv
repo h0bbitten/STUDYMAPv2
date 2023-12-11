@@ -1,4 +1,3 @@
-CPR,Name,Math Grade,English Grade,Science Grade
-1,A,2,12,7
-2,B,2,12,7
-3,C,2,12,7
+CPR, 1111111111, Math, 2, A, Science, 12, B, Language, 7, A,
+CPR, 2222222222, Math, 4, C, Science, 10, B, Language, 2, B,
+CPR, 3333333333, Math, 7, B, Science, 7, A, Language, 10, C,
