@@ -4,6 +4,7 @@
 #include "load_profile.h"
 #include "questionnaire.h"
 #include "KNN.h"
+#include "Results.h"
 
 #include <math.h>
 
@@ -30,7 +31,7 @@ int main() {
 
     //Filter_results
 
-    //Display_result(...) - Frederik!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    Display_results();
 
     //Change number of recommendations or decide a different action
     //Results(...)
