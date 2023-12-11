@@ -13,7 +13,6 @@
 
 
 char* answers_path;
-char* datast_path = {"Databases/datast.csv"};
 char* edu_data_dir_path = {"Databases/Edu_data"};
 char* result_path;
 
