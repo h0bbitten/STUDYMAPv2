@@ -1,23 +1,54 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <dirent.h>
 #include "Results.h"
 #include "Registration.h"
 #include "Main_menu.h"
 #include "KNN.h"
+#include "sys/stat.h"
 
 
-int file_count = 14;
+
+void incrementFileCount() {
+    numFiles++;
+}
 
 
+int countFilesInFolder(const char *folderPath) {
+    numFiles = 0;
+    DIR *dir;
+    struct dirent *entry;
+    struct stat fileStat;
+
+    dir = opendir(folderPath);
+    if (dir == NULL) {
+        perror("Unable to open directory");
+        return -1;
+    }
+
+    while ((entry = readdir(dir)) != NULL && numFiles < MAX_FILES) {
+        char fullPath[1024]; // Assuming a maximum path length of 1024
+        snprintf(fullPath, sizeof(fullPath), "%s/%s", folderPath, entry->d_name);
+
+        if (stat(fullPath, &fileStat) == 0) {
+            if (S_ISREG(fileStat.st_mode)) {
+                incrementFileCount();
+            }
+        }
+    }
+
+    closedir(dir);
+    return numFiles; // Return the number of files found
+}
 
 
 void Display_results() {
     char* edu_data = "Databases/Uni.csv";
 
-    results result[file_count];
+    results result[numFiles];
 
-    educations education[file_count];
+    educations education[numFiles];
 
     read_results(result_path, result);
 
@@ -31,7 +62,7 @@ void Display_results() {
     print_results(result, education, k);
 
     // Free allocated memory
-    for (int i = 0; i < file_count; i++) {
+    for (int i = 0; i < numFiles; i++) {
         free(result[i].name);
         free(education[i].name);
         free(education[i].link);
@@ -107,12 +138,12 @@ void read_edu_data(char* file_path, educations education[14]) {
     fclose(file);
 }
 
-void print_results(results result[14], educations education[14], int num_to_print) {
+void print_results(results result[numFiles], educations education[numFiles], int num_to_print) {
 
     double ref_distance = 27.0;
 
     for (int i = 0; i < num_to_print; i++) {
-        for (int j = 0; j < file_count; j++) {
+        for (int j = 0; j < numFiles; j++) {
             if (strcmp(result[i].name, education[j].name) == 0) {
 
                 double percentage = ((1 - (result[i].value / ref_distance)) * 100);

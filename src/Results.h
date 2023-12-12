@@ -4,6 +4,9 @@
 #define MAX_LEN 1000
 #define DELIMITER ","
 
+typedef struct {
+    int resultValue;
+} numResults;
 
 typedef struct {
     char* name;
@@ -18,11 +21,15 @@ typedef struct {
 
 } educations;
 
+static int numFiles = 0;
+
 void Display_results();
 
-void read_results(char* file_path, results result[14]);
-void read_edu_data(char* file_path, educations education[14]);
-void filter_results(results result[14]);
-void print_results(results result[14], educations education[14], int num_to_print);
+void read_results(char* file_path, results result[numFiles]);
+void read_edu_data(char* file_path, educations education[numFiles]);
+void filter_results(results result[numFiles]);
+void print_results(results result[numFiles], educations education[numFiles], int num_to_print);
+void findText(const char *filename, const char *search_term);
+int countFilesInFolder(const char *folderPath);
 
 #endif /* RESULTS_H */
