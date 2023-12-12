@@ -100,19 +100,20 @@ void End_menu(bool *exit_program, bool *log_out){
 }
 
 
-void amount_file(){
-    const char *folderPath = "./Databases/Edu_data"; // Adjust this to fit the Edu_data path if it changes :)
-
+void amount_file() {
+    const char *folderPath = "./Databases/Edu_data";
 
     // Count the files
     int fileCount = countFilesInFolder(folderPath);
 
     if (fileCount != -1) {
         // Declare an array of results
-        numResults resultArray[fileCount];
+        results resultArray[fileCount];
+        // Additional logic here if necessary
     } else {
-        fprintf(stderr,"Failed to count files in the folder.\n");
+        fprintf(stderr, "Failed to count files in the folder.\n");
     }
 }
+
 
 
