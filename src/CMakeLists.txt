@@ -1,4 +1,4 @@
-add_library(data_collection data_collection.c)
+add_library(Registration Registration.c)
 add_library(load_profile load_profile.c)
 add_library(questionnaire questionnaire.c)
 add_library(KNN KNN.c)

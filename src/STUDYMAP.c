@@ -1,4 +1,4 @@
-#include "data_collection.h"
+#include "Registration.h"
 #include "load_profile.h"
 #include "questionnaire.h"
 #include "KNN.h"
@@ -51,13 +51,13 @@ TODO
  Change options for new test (not "666")              -       done
  Loop for whole program                               -       done
  Options after displaying result (logout, new test, delete result, exit program, show more results, choose other save)      -       done
- Write description for each education
- Add more educations?
- Make results dynamic - not static using magic numbers
- Make functions same syntax, "example_function", not "ExampleFunction"
- Fix user experience, what's written out to the user
- Clean up code, remove unused stuff, don't break the program
- IDK, something else
+ Write description for each education - Veiz
+ Add more educations? - Allan
+ Make results dynamic - not static using magic numbers - Frejerik
+ Make functions same syntax, "example_function", not "ExampleFunction" - Allan
+ Fix user experience, what's written out to the user - Allan
+ Clean up code, remove unused stuff, don't break the program - Jonas
+ IDK, something else - SØren, Thomas
  */
 
 void what_now(bool *exit_program, bool *log_out){
@@ -68,7 +68,6 @@ void what_now(bool *exit_program, bool *log_out){
     printf("\nChoose an option for what to do now\n");
 
     char* input = NULL;
-    int number = 0;
 
     do {
 

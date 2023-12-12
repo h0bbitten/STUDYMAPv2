@@ -1,4 +1,4 @@
-#include "data_collection.h"
+#include "Registration.h"
 
 #include <stdio.h>
 #include <stdlib.h>

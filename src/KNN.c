@@ -1,4 +1,4 @@
-#include "data_collection.h"
+#include "Registration.h"
 #include "load_profile.h"
 #include "questionnaire.h"
 #include "KNN.h"

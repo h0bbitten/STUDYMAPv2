@@ -1,5 +1,5 @@
 #include "questionnaire.h"
-#include "data_collection.h"
+#include "Registration.h"
 #include "load_profile.h"
 
 #include <stdio.h>

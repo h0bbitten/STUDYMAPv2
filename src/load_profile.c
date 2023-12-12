@@ -1,5 +1,5 @@
 #include "load_profile.h"
-#include "data_collection.h"
+#include "Registration.h"
 #include "questionnaire.h"
 #include "KNN.h"
 
