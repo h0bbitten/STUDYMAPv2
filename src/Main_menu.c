@@ -61,7 +61,7 @@ void Main_menu(bool* do_questionnaire){
         // Display all the files in the directory
         for (int i = 0; i < results_file_count; i++) {
             print_counter++;
-            printf("%d: View results from test taken on %s\n", print_counter, change_date_format(result_files[i].name));
+            printf("%d: View results from test taken on %s (press '%d')\n", print_counter, change_date_format(result_files[i].name), print_counter);
         }
     }
 
@@ -106,7 +106,7 @@ void Main_menu(bool* do_questionnaire){
     }
     else{
 
-        printf("\nChoose an action or take a new test (n)\n>");
+        printf("\nChoose a previously saved result above or take a new test (press 'n')\n>");
 
         char* input = NULL;
         int number = 0;
@@ -163,7 +163,6 @@ void scan_file_names(const char *dir_path, file_names *files, int *file_count) {
     DIR *dir = opendir(dir_path);
 
     if (dir == NULL) {
-        fprintf(stderr, "Error opening directory %s", dir_path);
         return;
     }
 

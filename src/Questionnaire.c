@@ -48,7 +48,7 @@ void Questionnaire(){
     }
     //If it is in progress then do the questionnaire from where the user left of
     else if (in_progress == true) {
-        printf("\nUnfinished test found!\nContinuing previous questionnaire\n");
+        printf("\nUnfinished test found!\nContinuing previous test\n");
 
         //Update name/date of file
         char* new_name = (char*)malloc(PATH_MAX);
