@@ -44,7 +44,6 @@ return 0;
 /*
 
 TODO
- Filter results!!!
  Do read_results                                      -       done
  Do read_edu                                          -       done
  Do print_results                                     -       done
@@ -52,13 +51,13 @@ TODO
  Change options for new test (not "666")              -       done
  Loop for whole program                               -       done
  Options after displaying result (logout, new test, delete result, exit program, show more results, choose other save)      -       done
- Write description for each education - Veiz
- Add more educations? - Allan
- Make results dynamic - not static using magic numbers - Frejerik
+ Write description for each education - done
+ Add more educations? - done
+ Make results dynamic - not static using magic numbers - done
  Make functions same syntax, "example_function", not "ExampleFunction" - Allan
- Fix user experience, what's written out to the user - Allan
- Clean up code, remove unused stuff, don't break the program - Jonas
- IDK, something else - SØren, Thomas
+ Fix user experience, what's written out to the user - ALlan
+ Clean up code, remove unused stuff, don't break the program - done
+ Filter_results - Søren cook
  */
 
 void End_menu(bool *exit_program, bool *log_out){
