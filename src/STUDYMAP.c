@@ -57,15 +57,19 @@ TODO
  Make functions same syntax, "example_function", not "ExampleFunction" - Allan
  Fix user experience, what's written out to the user - ALlan
  Clean up code, remove unused stuff, don't break the program - done
+ Tilføj de rigtige karakterer inde i CSV filerne - Søren fixer. Den dejlige rødhåret ridder
  Filter_results - Søren cook
  */
 
 void End_menu(bool *exit_program, bool *log_out){
 
 
-    printf("\nlogout (l), delete result (d), exit program (q), new test, show more results, choose other save, back to main menu (m)\n");
+    printf("\n• Exit program (press 'Q')\n"
+           "• Back to main menu (press 'M')\n"
+           "• Logout (press 'L')\n"
+           "• Delete result (press 'D')\n");
 
-    printf("\nChoose an option for what to do now\n");
+    printf("\nPlease choose an action above\n>");
 
     char* input = NULL;
 
