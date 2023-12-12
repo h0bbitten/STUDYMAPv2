@@ -54,7 +54,7 @@ void Display_results() {
 
     read_edu_data(edu_data, education);
 
-    filter_results(result, education, numFiles);
+    filter_results(result, education);
 
     int k = 3;
 
@@ -130,6 +130,11 @@ void read_edu_data(char* file_path, educations education[14]) {
                         strcat(education[count].description, token);
                     }
 
+                    // Remove the last character in education.description
+                    if (strlen(education[count].description) > 0) {
+                        education[count].description[strlen(education[count].description) - 1] = '\0';
+                    }
+
                     count++;
                 }
             }
@@ -139,7 +144,6 @@ void read_edu_data(char* file_path, educations education[14]) {
 }
 
 void print_results(results result[numFiles], educations education[numFiles], int num_to_print) {
-
     double ref_distance = 27.0;
 
     for (int i = 0; i < num_to_print; i++) {
@@ -148,7 +152,22 @@ void print_results(results result[numFiles], educations education[numFiles], int
 
                 double percentage = ((1 - (result[i].value / ref_distance)) * 100);
 
-                printf("%s (%.2f%% match):\n%s\nTo see more check out: %s\n\n", result[i].name, percentage, education[j].description, education[j].link);
+                printf("%s (%.2f%% match):\n", result[i].name, percentage);
+
+                // Print education.description with line breaks at spaces
+                int line_length = 0;
+                char *token = strtok(education[j].description, " ");
+                while (token != NULL) {
+                    if (line_length + strlen(token) + 1 > LINE_WIDTH) {
+                        printf("\n");
+                        line_length = 0;
+                    }
+                    printf("%s ", token);
+                    line_length += strlen(token) + 1;
+                    token = strtok(NULL, " ");
+                }
+
+                printf("\nTo see more, check out: %s\n\n", education[j].link);
             }
         }
     }
@@ -163,7 +182,7 @@ bool isGradeCompatible(const char* requiredGrade, const char* userGrade) {
     return false; // Otherwise, not compatible
 }
 
-void filter_results(results* result, educations* education, int numFiles) {
+void filter_results(results result[numFiles], educations education[numFiles]) {
     char user_grade[10];
     bool grade_found = false;
     char line[256];
