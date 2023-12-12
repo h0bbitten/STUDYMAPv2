@@ -6,29 +6,10 @@
 #include "Main_menu.h"
 #include "KNN.h"
 
-typedef struct {
-    char* name;
-    double value;
-
-} results;
-
-typedef struct {
-    char* name;
-    char* link;
-    char* description;
-
-} educations;
 
 int file_count = 8;
 
 
-void read_results(char* file_path, results result[8]);
-
-void read_edu_data(char* file_path, educations education[8]);
-
-void filter_results(results result[8]);
-
-void print_results(results result[8], educations education[8], int num_to_print);
 
 
 void Display_results() {
@@ -81,10 +62,9 @@ void read_results(char* file_path, results result[8]) {
             }
         }
     }
-
     fclose(file);
-
 }
+
 void read_edu_data(char* file_path, educations education[8]) {
     FILE *file = fopen(file_path, "r");
     if (file == NULL) {
@@ -116,10 +96,9 @@ void read_edu_data(char* file_path, educations education[8]) {
             }
         }
     }
-
     fclose(file);
-
 }
+
 void print_results(results result[8], educations education[8], int num_to_print) {
 
     double ref_distance = 27.0;
