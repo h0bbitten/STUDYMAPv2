@@ -8,27 +8,12 @@
 #include <ctype.h>
 #include <string.h>
 
+void amount_file();
 void End_menu(bool *exit_program, bool *log_out);
 
 int main() {
-    const char *folderPath = "./Databases/Edu_data"; // Adjust this to fit the Edu_data path if it changes :)
 
-    // Count the files
-    int fileCount = countFilesInFolder(folderPath);
-
-    if (fileCount != -1) {
-        printf("Number of files in folder: %d\n", fileCount);
-
-        // Declare an array of results
-        numResults resultArray[fileCount];
-
-
-        // Use the results as needed
-        // ...
-    } else {
-        printf("Failed to count files in the folder.\n");
-    }
-
+    amount_file();
 
     bool exit_program = false;
     bool log_out = true;
@@ -116,6 +101,19 @@ void End_menu(bool *exit_program, bool *log_out){
 }
 
 
+void amount_file(){
+    const char *folderPath = "./Databases/Edu_data"; // Adjust this to fit the Edu_data path if it changes :)
 
+
+    // Count the files
+    int fileCount = countFilesInFolder(folderPath);
+
+    if (fileCount != -1) {
+        // Declare an array of results
+        numResults resultArray[fileCount];
+    } else {
+        fprintf(stderr,"Failed to count files in the folder.\n");
+    }
+}
 
 
