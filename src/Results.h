@@ -3,6 +3,7 @@
 
 #define MAX_LEN 1000
 #define DELIMITER ","
+#define LINE_WIDTH 100
 
 typedef struct {
     int resultValue;
