@@ -1,6 +1,6 @@
 #include "Registration.h"
-#include "load_profile.h"
-#include "questionnaire.h"
+#include "Main_menu.h"
+#include "Questionnaire.h"
 #include "KNN.h"
 #include "Results.h"
 

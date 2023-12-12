@@ -45,13 +45,9 @@ void hash(char *str, unsigned int *result) {
     }
 }
 
-void login() {
+void Registration() {
     //Creates a user of the type struct Logins and inputs the current user into it
     current_user = load_user();
-    unsigned int hashed_password;
-
-    //debug line
-    printf("Username: %s, Password:  %u, CPR: %s",current_user.username, hashed_password, current_user.cpr);
 }
 
 
@@ -59,8 +55,7 @@ Logins load_user() {
 
     //Create directory for databases
     make_directory("Databases");
-
-
+    
     //Create directory for users
     make_directory("Databases/Users");
 
@@ -91,7 +86,7 @@ Logins load_user() {
                 exit(1);
             }
 
-            int usernameExists;
+            int username_exists;
 
             do {
                 bool correct_username = false;
@@ -108,22 +103,22 @@ Logins load_user() {
                 } while (correct_username == false);
 
                 char line[MAX_LINE_LENGTH];
-                usernameExists = 0;
+                username_exists = 0;
 
                 rewind(Users);
 
                 while (fgets(line, sizeof(line), Users) != NULL) {
-                    char tempLine[MAX_LINE_LENGTH];
-                    strcpy(tempLine, line);
+                    char temp_line[MAX_LINE_LENGTH];
+                    strcpy(temp_line, line);
 
-                    char *existingUsername = strtok(tempLine, ",");
-                    if (existingUsername != NULL && strcmp(existingUsername, this_user.username) == 0) {
-                        usernameExists = 1;
+                    char *existing_username = strtok(temp_line, ",");
+                    if (existing_username != NULL && strcmp(existing_username, this_user.username) == 0) {
+                        username_exists = 1;
                         printf("Username already exists. Please choose a different username.\n");
                         break;
                     }
                 }
-            } while (usernameExists);
+            } while (username_exists);
 
             fclose(Users);
 
@@ -208,7 +203,7 @@ Logins load_user() {
                 } else {
                     return this_user;
                 }
-            } while (1); // Loop indtil der er et login der passer
+            } while (1); // Loop indtil der er et Registration der passer
         }
     }
 

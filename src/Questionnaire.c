@@ -1,6 +1,6 @@
-#include "questionnaire.h"
+#include "Questionnaire.h"
 #include "Registration.h"
-#include "load_profile.h"
+#include "Main_menu.h"
 
 #include <stdio.h>
 #include <stdlib.h>
