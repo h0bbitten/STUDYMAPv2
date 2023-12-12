@@ -112,20 +112,28 @@ void read_edu_data(char* file_path, educations education[8]) {
 
 }
 void print_results(results result[8], educations education[8], int num_to_print) {
-
     double ref_distance = 27.0;
 
-    for (int i = 0; i < num_to_print; i++) {
-        for (int j = 0; j < file_count; j++) {
-            if (strcmp(result[i].name, education[j].name) == 0) {
+    printf("Recommended results for %s:\n\n", current_user.username);
 
-                double percentage = ((1 - (result[i].value / ref_distance)) * 100);
+    for (int i = 0; i < file_count; i++) {
+        // Check if the value is not filtered
+        if (result[i].value != -1.0) {
+            for (int j = 0; j < file_count; j++) {
+                // Find the matching education description
+                if (strcmp(result[i].name, education[j].name) == 0) {
+                    // Calculate the match percentage
+                    double percentage = ((1 - (result[i].value / ref_distance)) * 100);
 
-                printf("%s %.2f%% match:\n%s\n", result[i].name, percentage, education[j].description);
+                    // Print the result
+                    printf("%s %.2f%% match:\n%s\n", result[i].name, percentage, education[j].description);
+                    break;  // No need to check further for this result
+                }
             }
         }
     }
 }
+
 
 void read_user_data(char* file_path) {
     FILE* file = fopen(file_path, "r");
@@ -155,14 +163,54 @@ void read_user_data(char* file_path) {
 
 void filter_results(results result[8], educations education[8]) {
     for (int i = 0; i < file_count; i++) {
-        // Check if the education requires "Mat A"
-        if (strstr(education[i].description, "Mat A") != NULL) {
-            // Check if the user has "Mat B"
-            if (strstr(current_user.requirements, "Mat B") != NULL) {
-                // Filter out the result
-                printf("Filtering out result: %s\n", result[i].name);
-                result[i].value = -1.0;  // Placeholder for filtering
-            }
+        char edu_file_name[100];  // Adjust buffer size as needed
+
+        // Construct the file name with the correct format
+        snprintf(edu_file_name, sizeof(edu_file_name), "Databases/Edu_data/%s.csv", education[i].name);
+
+        // Open the education file
+        FILE* edu_file = fopen(edu_file_name, "r");
+        if (edu_file == NULL) {
+            fprintf(stderr, "Failed to open %s.\n", edu_file_name);
+            continue;  // Skip to the next education file if it doesn't exist
         }
+
+        // Read the entire file into memory
+        fseek(edu_file, 0, SEEK_END);
+        long file_size = ftell(edu_file);
+        rewind(edu_file);
+        char* file_content = malloc(file_size + 1);
+        fread(file_content, 1, file_size, edu_file);
+        file_content[file_size] = '\0';
+
+        char* token;
+
+        // Tokenize the file content
+        token = strtok(file_content, DELIMITER);
+        while (token != NULL) {
+            // Check if the token is "done"
+            if (strcmp(token, "done") == 0) {
+                // Check if the next token is "Mat A"
+                token = strtok(NULL, DELIMITER);
+                if (token != NULL && strcmp(token, "MatA") == 0) {
+                    // Check if the user has "Mat B"
+                    if (strstr(current_user.requirements, "MatB") != NULL) {
+                        // Filter out the result
+                        printf("Filtering out result: %s\n", result[i].name);
+                        result[i].value = -1.0;  // Placeholder for filtering
+                        break;  // No need to check further for this education
+                    }
+                }
+            }
+
+            // Move to the next token
+            token = strtok(NULL, DELIMITER);
+        }
+
+        // Free allocated memory
+        free(file_content);
+        fclose(edu_file);
     }
 }
+
+

@@ -155,7 +155,7 @@ Logins load_user() {
                 }
             } while (correct_cpr == false);
 
-            printf("Enter Mat A or Mat B.\n>");
+            printf("Enter MatA or MatB.\n>");
             scanf("%s", this_user.requirements);
 
             //This opens the csv file Users in the "a" (append) mode

@@ -4,8 +4,7 @@
 #define PASSWORD_MIN_LENGTH 8
 #define CPR_MAX_LENGTH 10
 #define HASH_PASSWORD 100
-#define MAX_REQUIREMENTS 10
-#define REQUIREMENT_MAX_LENGTH 10
+#define REQUIREMENTS 10
 #define MAX_LINE_LENGTH (USERNAME_MAX_LENGTH + PASSWORD_MAX_LENGTH + CPR_MAX_LENGTH)
 
 
@@ -16,7 +15,7 @@ typedef struct
     char password[PASSWORD_MAX_LENGTH];
     char cpr[CPR_MAX_LENGTH];
     char hash_password[HASH_PASSWORD];
-    char requirements[MAX_REQUIREMENTS];
+    char requirements[REQUIREMENTS];
 }Logins;
 
 extern Logins current_user;
