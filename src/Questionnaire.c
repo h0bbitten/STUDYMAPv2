@@ -36,7 +36,7 @@ void Questionnaire(){
     //Checks if there is a questionnaire in progress
     //If it isn't then do the questionnaire normally/from the start
     if (in_progress == false){
-        printf("\nCreating new questionnaire\n");
+        printf("\nNew test:\n");
 
         questions("q_00");
 
@@ -77,47 +77,47 @@ void questions(char* last_question_id){
     //start of the questionaire
     //question 1
     if (strcmp(last_question_id, "q_00") == 0) {
-        question("I value hands-on learning experiences", "q_01");
+        question("Question 1: I value hands-on learning experiences", "q_01");
         last_question_id = "q_01";
     }
     //question 2
     if (strcmp(last_question_id, "q_01") == 0) {
-        question("Programming is interesting to me", "q_02");
+        question("Question 2: Programming is interesting to me", "q_02");
         last_question_id = "q_02";
     }
     //question 3
     if (strcmp(last_question_id, "q_02") == 0) {
-        question("I have a keen interest in working with software development", "q_03");
+        question("Question 3: I have a keen interest in working with software development", "q_03");
         last_question_id = "q_03";
     }
     //question 4
     if (strcmp(last_question_id, "q_03") == 0) {
-        question("I prefer attending classes in person rather than self-study", "q_04");
+        question("Question 4: I prefer attending classes in person rather than self-study", "q_04");
         last_question_id = "q_04";
     }
     //question 5
     if (strcmp(last_question_id, "q_04") == 0) {
-        question("I find joy in studying and applying mathematical concepts", "q_05");
+        question("Question 5: I find joy in studying and applying mathematical concepts", "q_05");
         last_question_id = "q_05";
     }
     //question 6
     if (strcmp(last_question_id, "q_05") == 0) {
-        question("Collaborating with others in study groups is important to me", "q_06");
+        question("Question 6: Collaborating with others in study groups is important to me", "q_06");
         last_question_id = "q_06";
     }
     //question 7
     if (strcmp(last_question_id, "q_06") == 0) {
-        question("Work projects are important to me", "q_07");
+        question("Question 7: Work projects are important to me", "q_07");
         last_question_id = "q_07";
     }
     //question 8
     if (strcmp(last_question_id, "q_07") == 0) {
-        question("I aspire to gain access to a diverse range of career paths", "q_08");
+        question("Question 8: I aspire to gain access to a diverse range of career paths", "q_08");
         last_question_id = "q_08";
     }
     //question 9
     if (strcmp(last_question_id, "q_08") == 0) {
-        question("I prefer well-defined assignments and tasks", "q_09");
+        question("Question 9: I prefer well-defined assignments and tasks", "q_09");
         last_question_id = "q_09";
     }
 }

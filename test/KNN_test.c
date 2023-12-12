@@ -15,12 +15,12 @@ int main(void) {
     test_Euclidean_distance_case2();
 }
 
-double Euclidean_distance(KnnDataPoints KnnTrainingPoint, KnnDataPoints KnnUserPoint){
+double euclidean_distance(knn_data_points Knn_Training_Point, knn_data_points Knn_User_Point){
 
     //Calculates a part of Euclidean's distance formula for each answer
     double distance = 0.0;
     for (int i = 0; i < NUM_ANSWER; i++) {
-        distance += pow(KnnUserPoint.answers[i] - KnnTrainingPoint.answers[i], 2);
+        distance += pow(Knn_User_Point.answers[i] - Knn_Training_Point.answers[i], 2);
     }
     //Returns the completely calculated result for all answers
     return sqrt(distance);
@@ -28,8 +28,8 @@ double Euclidean_distance(KnnDataPoints KnnTrainingPoint, KnnDataPoints KnnUserP
 
 void test_Euclidean_distance_case1(void) {
     double distance;
-    KnnDataPoints TrainingData;
-    KnnDataPoints UserData;
+    knn_data_points TrainingData;
+    knn_data_points UserData;
 
     TrainingData.answers[0] = 7;
     TrainingData.answers[1] = 4;
@@ -51,14 +51,14 @@ void test_Euclidean_distance_case1(void) {
     UserData.answers[7] = 1;
     UserData.answers[8] = 8;
 
-    distance = Euclidean_distance(TrainingData, UserData);
+    distance = euclidean_distance(TrainingData, UserData);
     assert(is_almost_equal(distance, 10.19804));
 }
 
 void test_Euclidean_distance_case2(void) {
     double distance;
-    KnnDataPoints TrainingData;
-    KnnDataPoints UserData;
+    knn_data_points TrainingData;
+    knn_data_points UserData;
 
     TrainingData.answers[0] = 10;
     TrainingData.answers[1] = 10;
@@ -80,7 +80,7 @@ void test_Euclidean_distance_case2(void) {
     UserData.answers[7] = 10;
     UserData.answers[8] = 10;
 
-    distance = Euclidean_distance(TrainingData, UserData);
+    distance = euclidean_distance(TrainingData, UserData);
     assert(is_almost_equal(distance, 0));
 }
 

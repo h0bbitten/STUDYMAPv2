@@ -102,11 +102,11 @@ void Main_menu(bool* do_questionnaire){
         snprintf(answers_path, PATH_MAX, "%s/%s.csv", dir_answers_path, the_time);
         *do_questionnaire = true;
 
-        printf("\nNo saved test found\n");
+        printf("\nNo saved test found. Please proceed underneath to take a new test\n");
     }
     else{
 
-        printf("\nChoose a previously saved result above or take a new test (press 'n')\n>");
+        printf("\nChoose a previously saved tests above or take a new test (press 'N')\n>");
 
         char* input = NULL;
         int number = 0;

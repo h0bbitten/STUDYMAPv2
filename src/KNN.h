@@ -10,11 +10,11 @@ typedef struct KnnDataPoints {
     char* name;
     double result;
 
-} KnnDataPoints;
+} knn_data_points;
 
 
 void KNN();
-void parse_data(FILE* data_stream, KnnDataPoints* Knn_Data_Point);
-double Euclidean_distance(KnnDataPoints Knn_Training_Point, KnnDataPoints Knn_User_Point);
+void parse_data(FILE* data_stream, knn_data_points* knn_data_point);
+double euclidean_distance(knn_data_points knn_training_point, knn_data_points knn_user_point);
 int smallest_value(const void *a, const void *b);
-void cleanup(KnnDataPoints* Knn_Data_Point);
+void cleanup(knn_data_points* knn_data_point);
