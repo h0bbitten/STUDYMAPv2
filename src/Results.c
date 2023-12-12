@@ -54,9 +54,7 @@ void Display_results() {
 
     read_edu_data(edu_data, education);
 
-   filter_results(result, education, numFiles);
-
-
+    //filter_results(result);
 
     int k = 3;
 
@@ -132,6 +130,11 @@ void read_edu_data(char* file_path, educations education[14]) {
                         strcat(education[count].description, token);
                     }
 
+                    // Remove the last character in education.description
+                    if (strlen(education[count].description) > 0) {
+                        education[count].description[strlen(education[count].description) - 1] = '\0';
+                    }
+
                     count++;
                 }
             }
@@ -166,75 +169,6 @@ void print_results(results result[numFiles], educations education[numFiles], int
 
                 printf("\nTo see more, check out: %s\n\n", education[j].link);
             }
-        }
-    }
-}
-
-bool isGradeCompatible(const char* requiredGrade, const char* userGrade) {
-    if (strcmp(userGrade, "MatA") == 0) {
-        return true; // MatA is compatible with anything
-    } else if (strcmp(userGrade, "MatB") == 0) {
-        return strcmp(requiredGrade, "MatB") == 0; // MatB is only compatible with MatB
-    }
-    return false; // Otherwise, not compatible
-}
-
-void filter_results(results* result, educations* education, int numFiles) {
-    char user_grade[10];
-    bool grade_found = false;
-    char line[256];
-    char* token;
-
-    FILE* users_file = fopen("Databases/Users/Users.csv", "r");
-    if (users_file == NULL) {
-        fprintf(stderr, "Failed to open Users.csv.\n");
-        return;
-    }
-
-    // Find the user's grade
-    while (fgets(line, sizeof(line), users_file)) {
-        token = strtok(line, ",");
-        if (strcmp(token, current_user.username) == 0) {
-            strtok(NULL, ",");  // Skip password and CPR
-            token = strtok(NULL, ",\n");  // Read grade
-            if (token) {
-                strncpy(user_grade, token, sizeof(user_grade));
-                grade_found = true;
-                break;
-            }
-        }
-    }
-    fclose(users_file);
-
-    if (!grade_found) {
-        fprintf(stderr, "User's grade not found.\n");
-        return;
-    }
-
-    // Filter results based on user's grade
-    for (int i = 0; i < numFiles; i++) {
-        char edu_file_path[100];
-        snprintf(edu_file_path, sizeof(edu_file_path), "Databases/Edu_data/%s.csv", education[i].name);
-        FILE* edu_file = fopen(edu_file_path, "r");
-        if (edu_file == NULL) {
-            fprintf(stderr, "Failed to open %s.\n", edu_file_path);
-            result[i].value = -1.0; // Mark as filtered out
-            continue;
-        }
-
-        char edu_line[MAX_LEN];
-        bool isCompatible = false;
-        while (fgets(edu_line, sizeof(edu_line), edu_file)) {
-            char* req_grade = strrchr(edu_line, ',') + 1; // Get the grade requirement part
-            if (req_grade && isGradeCompatible(req_grade, user_grade)) {
-                isCompatible = true;
-                break;
-            }
-        }
-        fclose(edu_file);
-
-        if (!isCompatible) {
-            result[i].value = -1.0;  // Filter out this option
         }
     }
 }
