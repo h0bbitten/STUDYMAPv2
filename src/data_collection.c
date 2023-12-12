@@ -155,6 +155,9 @@ Logins load_user() {
                 }
             } while (correct_cpr == false);
 
+            printf("Enter MatA or MatB.\n>");
+            scanf("%s", this_user.requirements);
+
             //This opens the csv file Users in the "a" (append) mode
             Users = fopen(users_path, "a");
             //Error case: checks if the file is opened correctly
@@ -165,7 +168,7 @@ Logins load_user() {
 
             hash(this_user.password, &hashed_password);
 
-            fprintf(Users, "%s,%u,%s\n", this_user.username, hashed_password, this_user.cpr);
+            fprintf(Users, "%s,%u,%s,%s\n", this_user.username, hashed_password, this_user.cpr, this_user.requirements);
             fclose(Users);
 
             return this_user;
