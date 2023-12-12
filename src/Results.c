@@ -86,10 +86,18 @@ void read_edu_data(char* file_path, educations education[14]) {
                 education[count].link = malloc(strlen(token) + 1);
                 strcpy(education[count].link, token);
 
+                // Start concatenating tokens from the third element
                 token = strtok(NULL, DELIMITER);
                 if (token != NULL) {
                     education[count].description = malloc(strlen(token) + 1);
                     strcpy(education[count].description, token);
+
+                    // Concatenate the rest of the line until newline character
+                    while ((token = strtok(NULL, "\n")) != NULL) {
+                        education[count].description = realloc(education[count].description, strlen(education[count].description) + strlen(token) + 2);
+                        strcat(education[count].description, " ");
+                        strcat(education[count].description, token);
+                    }
 
                     count++;
                 }
