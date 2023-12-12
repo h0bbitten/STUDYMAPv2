@@ -52,6 +52,7 @@ void login() {
 
     //debug line
     printf("Username: %s, Password:  %u, CPR: %s",current_user.username, hashed_password, current_user.cpr);
+    
 }
 
 
