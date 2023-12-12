@@ -91,12 +91,12 @@ Logins load_user() {
             do {
                 bool correct_username = false;
                 do {
-                    printf("Please enter a username (Min. %d characters & Max. %d characters)\n>", USERNAME_MIN_LENGTH,
+                    printf("Choose a username (%d-%d characters)\n>", USERNAME_MIN_LENGTH,
                            USERNAME_MAX_LENGTH);
                     scanf("%s", this_user.username);
 
                     if (strlen(this_user.username) < USERNAME_MIN_LENGTH) {
-                        printf("The entered username must be at least 5 characters. Try again.\n");
+                        printf("The entered username must be at least 5 characters. Please try again.\n");
                     } else {
                         correct_username = true;
                     }
@@ -126,12 +126,12 @@ Logins load_user() {
 
             bool correct_password = false;
             do {
-                printf("Please enter a password (Min. %d characters & Max. %d characters)\n>", PASSWORD_MIN_LENGTH,
+                printf("Create a password (%d-%d characters)\n>", PASSWORD_MIN_LENGTH,
                        PASSWORD_MAX_LENGTH);
                 scanf("%s", this_user.password);
 
                 if (strlen(this_user.password) < PASSWORD_MIN_LENGTH) {
-                    printf("The entered password must be at least 8 characters. Try again.\n");
+                    printf("The entered password must be at least 8 characters. Please try again.\n\n");
                 } else {
                     correct_password = true;
                 }
@@ -140,11 +140,11 @@ Logins load_user() {
 
             bool correct_cpr = false;
             do {
-                printf("Please enter your CPR-number.\n>");
+                printf("Please enter your CPR number.\n>");
                 scanf("%s", this_user.cpr);
 
                 if (strlen(this_user.cpr) != CPR_MAX_LENGTH) {
-                    printf("The entered CPR-number is not the correct length. Try again.\n");
+                    printf("The entered CPR number is not the correct length. Please make sure it has the right number of digits and try again.\n\n");
                 } else {
                     correct_cpr = true;
                 }
@@ -173,7 +173,7 @@ Logins load_user() {
             unsigned int hashed_password;
 
             do {
-                printf("Please enter your username\n>");
+                printf("Welcome back! Please enter your username\n>");
                 scanf(" %s", this_user.username);
 
                 printf("Please enter your password\n>");
@@ -210,7 +210,7 @@ Logins load_user() {
 char login_or_signup() {
     char input;
     do {
-        printf("Login (L) or sign-up (S)? \n>");
+        printf("\nWelcome! Would you like to log in (L) or create a new account (S)?\n>");
         input = getchar();
         while(getchar() != '\n');
     } while (input != 'L' && input != 'l' && input != 'S' && input != 's');
