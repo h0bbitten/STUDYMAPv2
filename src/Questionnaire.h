@@ -16,7 +16,6 @@ void clear_terminal();
 
 bool check_in_progress(char *file_path);
 char* get_last_question_id(char *filename);
-void resume_answers(FILE *file, char *last_question_ID);
 
 
-void get_date(char *formattedDate);
+void get_date(char *formatted_date);

@@ -1,6 +1,6 @@
-#include "load_profile.h"
-#include "data_collection.h"
-#include "questionnaire.h"
+#include "Main_menu.h"
+#include "Registration.h"
+#include "Questionnaire.h"
 #include "KNN.h"
 
 #include <dirent.h>
@@ -9,16 +9,17 @@
 #include <stdlib.h>
 #include <libgen.h>
 #include <string.h>
+#include <ctype.h>
 
 #include <sys/stat.h>
 #ifdef _WIN32
-#include <direct.h>
-#define mkdir(path, mode) _mkdir(path)
+    #include <direct.h>
+    #define mkdir(path, mode) _mkdir(path)
 #endif
 
 char* dir_results_path;
 
-void Load_profile(bool* do_questionnaire){
+void Main_menu(bool* do_questionnaire){
 
     //Gets the date and time for the start of the questionnaire
     get_date(the_time);
@@ -100,16 +101,28 @@ void Load_profile(bool* do_questionnaire){
         }
         snprintf(answers_path, PATH_MAX, "%s/%s.csv", dir_answers_path, the_time);
         *do_questionnaire = true;
+
+        printf("\nNo saved test found\n");
     }
     else{
-        printf("\nChoose an action or take a new test (666)\n>");
-        bool valid_input = false;
-        int what_do;
-        do {
-            what_do = read_only_integer(&valid_input);
-        } while (!valid_input || what_do <= 0 || what_do > print_counter && what_do != 666);  // Rewrite this
 
-        if (what_do == 666){
+        printf("\nChoose an action or take a new test (n)\n>");
+
+        char* input = NULL;
+        int number = 0;
+
+        do {
+
+            input = read_input();
+
+            if (input != NULL && isdigit(*input)) {
+                number = atoi(input);
+            }
+
+        } while ((input == NULL || input[0] == '\0' || (number <= 0 || number > print_counter)) && (input == NULL || strcmp(input, "n") != 0) && (input == NULL || strcmp(input, "N") != 0));
+
+
+        if (strcmp(input, "n") == 0 || strcmp(input, "N") == 0){
             //Create path for file for answers for current user
             answers_path = (char*)malloc(PATH_MAX);
             if (!answers_path) {
@@ -118,18 +131,18 @@ void Load_profile(bool* do_questionnaire){
             snprintf(answers_path, PATH_MAX, "%s/%s.csv", dir_answers_path, the_time);
             *do_questionnaire = true;
         }
-        else if (what_do <= results_file_count){
+        else if (number <= results_file_count){
             //Create path for file for results for current user
             result_path = (char*)malloc(PATH_MAX);
             if (!result_path) {
                 fprintf(stderr, "Error allocating memory for result_path.\n");
             }
-            snprintf(result_path, PATH_MAX, "%s/%s.csv", dir_results_path, result_files[what_do - 1].name);
+            snprintf(result_path, PATH_MAX, "%s/%s.csv", dir_results_path, result_files[number - 1].name);
 
             *do_questionnaire = false;
         }
         else{
-            int num_retrieve = (what_do - results_file_count);
+            int num_retrieve = (number - results_file_count);
             //Create path for file for answers for current user
             answers_path = (char*)malloc(PATH_MAX);
             if (!answers_path) {
@@ -150,7 +163,7 @@ void scan_file_names(const char *dir_path, file_names *files, int *file_count) {
     DIR *dir = opendir(dir_path);
 
     if (dir == NULL) {
-        perror("Error opening directory");
+        fprintf(stderr, "Error opening directory %s", dir_path);
         return;
     }
 
@@ -195,16 +208,16 @@ void scan_file_names(const char *dir_path, file_names *files, int *file_count) {
     closedir(dir);
 }
 
-char* change_date_format(char *dateString) {
+char* change_date_format(char *date_string) {
 
     int year, month, day, hour, minute, second;
 
-    char *formattedDate = (char *)malloc(50);
+    char *formatted_date = (char *)malloc(50);
 
     // Read and create readable date
-    if (sscanf(dateString, "%d-%d-%d-%d-%d-%d", &year, &month, &day, &hour, &minute, &second) == 6) {
+    if (sscanf(date_string, "%d-%d-%d-%d-%d-%d", &year, &month, &day, &hour, &minute, &second) == 6) {
         // Format the result
-        sprintf(formattedDate, "%02d:%02d, %d %s %d", hour, minute, day,
+        sprintf(formatted_date, "%02d:%02d, %d %s %d", hour, minute, day,
                 (month == 1) ? "January" :
                 (month == 2) ? "February" :
                 (month == 3) ? "March" :
@@ -219,9 +232,25 @@ char* change_date_format(char *dateString) {
                 (month == 12) ? "December" : "Invalid month",
                 year);
 
-        return formattedDate;
+        return formatted_date;
     } else {
         printf("Invalid date format\n");
         return NULL;
     }
 }
+
+char* read_input() {
+    static char buffer[MAX_CHARACTERS];
+
+    if (fgets(buffer, sizeof(buffer), stdin) != NULL) {
+        size_t len = strlen(buffer);
+        if (len > 0 && buffer[len - 1] == '\n') {
+            buffer[len - 1] = '\0';
+        }
+
+        return buffer;
+    }
+
+    return NULL;
+}
+
