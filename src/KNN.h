@@ -1,8 +1,8 @@
-#define NUM_EDU 8
+#include <stdio.h>
+
 #define NUM_ANSWER 9
 
 extern char* result_path;
-
 
 typedef struct KnnDataPoints {
 
@@ -13,8 +13,8 @@ typedef struct KnnDataPoints {
 } KnnDataPoints;
 
 
-void knn();
-void parse_data(FILE* data_stream, KnnDataPoints* KnnDataPoint);
-double Euclidean_distance(KnnDataPoints KnnTrainingPoint, KnnDataPoints KnnUserPoint);
+void KNN();
+void parse_data(FILE* data_stream, KnnDataPoints* Knn_Data_Point);
+double Euclidean_distance(KnnDataPoints Knn_Training_Point, KnnDataPoints Knn_User_Point);
 int smallest_value(const void *a, const void *b);
-void cleanup(KnnDataPoints* KnnDataPoint);
+void cleanup(KnnDataPoints* Knn_Data_Point);
