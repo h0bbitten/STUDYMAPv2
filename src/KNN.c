@@ -16,7 +16,7 @@ char* answers_path;
 char* edu_data_dir_path = {"Databases/Edu_data"};
 char* result_path;
 
-void knn() {
+void KNN() {
 
     file_names files[MAX_FILES];
     int file_count = 0;
@@ -24,37 +24,37 @@ void knn() {
     // Scan file names and assign a number to each file
     scan_file_names(edu_data_dir_path, files, &file_count);
 
-    KnnDataPoints KnnTrainingPoint[file_count];
+    KnnDataPoints Knn_Training_Point[file_count];
 
 
     // Display all the files in the directory
     for (int i = 0; i < file_count; i++) {
-        KnnTrainingPoint[i].name = strdup(files[i].name);
+        Knn_Training_Point[i].name = strdup(files[i].name);
         char data_path[PATH_MAX];
 
-        snprintf(data_path, sizeof(data_path), "Databases/Edu_data/%s.csv", KnnTrainingPoint[i].name);
+        snprintf(data_path, sizeof(data_path), "Databases/Edu_data/%s.csv", Knn_Training_Point[i].name);
 
         FILE* data_file = fopen(data_path, "r");
-        parse_data(data_file, &KnnTrainingPoint[i]);
+        parse_data(data_file, &Knn_Training_Point[i]);
         fclose(data_file);
     }
 
     FILE* answer;
     answer = fopen(answers_path, "r");
 
-    KnnDataPoints KnnUserPoint;
+    KnnDataPoints Knn_User_Point;
     //Parse data from current users answers to KNN
-    parse_data(answer, &KnnUserPoint);
+    parse_data(answer, &Knn_User_Point);
 
     fclose(answer);
 
     //Calculate distance between all educations and answers
     for (int i = 0; i < file_count; i++) {
-        KnnTrainingPoint[i].result = Euclidean_distance(KnnTrainingPoint[i], KnnUserPoint);
+        Knn_Training_Point[i].result = Euclidean_distance(Knn_Training_Point[i], Knn_User_Point);
     }
 
     //Sorts the distances smallest values first
-    qsort(KnnTrainingPoint, file_count, sizeof(KnnDataPoints), smallest_value);
+    qsort(Knn_Training_Point, file_count, sizeof(KnnDataPoints), smallest_value);
 
     //Create directory for results
     make_directory("Databases/Results");
@@ -89,19 +89,19 @@ void knn() {
 
     //Write top k results to file
     for (int i = 0; i < file_count; i++) {
-        fprintf(Result, "%s,%f\n", KnnTrainingPoint[i].name, KnnTrainingPoint[i].result);
+        fprintf(Result, "%s,%f\n", Knn_Training_Point[i].name, Knn_Training_Point[i].result);
     }
 
     fclose(Result);
 
     // Clean up allocated memory
     for (int i = 0; i < file_count; i++) {
-        cleanup(&KnnTrainingPoint[i]);
+        cleanup(&Knn_Training_Point[i]);
     }
 
 }
 
-void parse_data(FILE* data_stream, KnnDataPoints* KnnDataPoint) {
+void parse_data(FILE* data_stream, KnnDataPoints* Knn_Data_Point) {
     char line[1024];
     char* token;
 
@@ -123,7 +123,7 @@ void parse_data(FILE* data_stream, KnnDataPoints* KnnDataPoint) {
         if (index % 2 == 1) {
             // Process only numeric answers and skip non-numeric values
             if (isdigit(token[0])) {
-                KnnDataPoint->answers[(index - 1) / 2] = atoi(token);
+                Knn_Data_Point->answers[(index - 1) / 2] = atoi(token);
             }
         }
 
@@ -133,16 +133,16 @@ void parse_data(FILE* data_stream, KnnDataPoints* KnnDataPoint) {
     }
 
     // Initialize result
-    KnnDataPoint->result = 0.0;
+    Knn_Data_Point->result = 0.0;
 
 }
 
-double Euclidean_distance(KnnDataPoints KnnTrainingPoint, KnnDataPoints KnnUserPoint){
+double Euclidean_distance(KnnDataPoints Knn_Training_Point, KnnDataPoints Knn_User_Point){
 
     //Calculates a part of Euclidean's distance formula for each answer
     double distance = 0.0;
     for (int i = 0; i < NUM_ANSWER; i++) {
-        distance += pow(KnnUserPoint.answers[i] - KnnTrainingPoint.answers[i], 2);
+        distance += pow(Knn_User_Point.answers[i] - Knn_Training_Point.answers[i], 2);
     }
     //Returns the completely calculated result for all answers
     return sqrt(distance);
@@ -157,7 +157,7 @@ int smallest_value(const void *a, const void *b) {
     else if (result_A > result_B) return 1;
     else return 0;
 }
-void cleanup(KnnDataPoints* KnnDataPoint) {
+void cleanup(KnnDataPoints* Knn_Data_Point) {
     //Frees' memory for each name, beause I had to use malloc to allocate memory for them, not sure why it's needed but program crashes without :shrug:
-    free(KnnDataPoint->name);
+    free(Knn_Data_Point->name);
 }

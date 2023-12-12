@@ -5,12 +5,10 @@
 #include "Results.h"
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include <math.h>
 
-void what_now(bool *exit_program, bool *log_out);
+void End_menu(bool *exit_program, bool *log_out);
 
 int main() {
 
@@ -21,19 +19,19 @@ int main() {
     do {
 
         if (log_out == true){
-            login();
+            Registration();
         }
 
-        Load_profile(&do_questionnaire);
+        Main_menu(&do_questionnaire);
 
         if(do_questionnaire == true){
             Questionnaire();
-            knn();
+            KNN();
         }
 
         Display_results();
 
-        what_now(&exit_program, &log_out);
+        End_menu(&exit_program, &log_out);
 
     } while (exit_program == false);
 
@@ -60,7 +58,7 @@ TODO
  IDK, something else - SØren, Thomas
  */
 
-void what_now(bool *exit_program, bool *log_out){
+void End_menu(bool *exit_program, bool *log_out){
 
 
     printf("\nlogout (l), delete result (d), exit program (q), new test, show more results, choose other save, back to main menu (m)\n");

@@ -10,8 +10,8 @@ typedef struct {
 } file_names;
 
 
-void Load_profile(bool* do_questionnaire);
+void Main_menu(bool* do_questionnaire);
 
 void scan_file_names(const char *dir_path, file_names *files, int *file_count);
-char* change_date_format(char *dateString);
+char* change_date_format(char *date_string);
 char* read_input();

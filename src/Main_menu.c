@@ -1,4 +1,4 @@
-#include "load_profile.h"
+#include "Main_menu.h"
 #include "Registration.h"
 #include "Questionnaire.h"
 #include "KNN.h"
@@ -13,13 +13,13 @@
 
 #include <sys/stat.h>
 #ifdef _WIN32
-#include <direct.h>
-#define mkdir(path, mode) _mkdir(path)
+    #include <direct.h>
+    #define mkdir(path, mode) _mkdir(path)
 #endif
 
 char* dir_results_path;
 
-void Load_profile(bool* do_questionnaire){
+void Main_menu(bool* do_questionnaire){
 
     //Gets the date and time for the start of the questionnaire
     get_date(the_time);
@@ -208,16 +208,16 @@ void scan_file_names(const char *dir_path, file_names *files, int *file_count) {
     closedir(dir);
 }
 
-char* change_date_format(char *dateString) {
+char* change_date_format(char *date_string) {
 
     int year, month, day, hour, minute, second;
 
-    char *formattedDate = (char *)malloc(50);
+    char *formatted_date = (char *)malloc(50);
 
     // Read and create readable date
-    if (sscanf(dateString, "%d-%d-%d-%d-%d-%d", &year, &month, &day, &hour, &minute, &second) == 6) {
+    if (sscanf(date_string, "%d-%d-%d-%d-%d-%d", &year, &month, &day, &hour, &minute, &second) == 6) {
         // Format the result
-        sprintf(formattedDate, "%02d:%02d, %d %s %d", hour, minute, day,
+        sprintf(formatted_date, "%02d:%02d, %d %s %d", hour, minute, day,
                 (month == 1) ? "January" :
                 (month == 2) ? "February" :
                 (month == 3) ? "March" :
@@ -232,7 +232,7 @@ char* change_date_format(char *dateString) {
                 (month == 12) ? "December" : "Invalid month",
                 year);
 
-        return formattedDate;
+        return formatted_date;
     } else {
         printf("Invalid date format\n");
         return NULL;

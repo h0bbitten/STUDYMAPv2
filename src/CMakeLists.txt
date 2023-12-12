@@ -4,7 +4,7 @@ add_library(questionnaire Questionnaire.c)
 add_library(KNN KNN.c)
 add_library(Results Results.c)
 
-target_include_directories(data_collection PUBLIC .)
+target_include_directories(Registration PUBLIC .)
 target_include_directories(load_profile PUBLIC .)
 target_include_directories(questionnaire PUBLIC .)
 target_include_directories(KNN PUBLIC .)
@@ -14,5 +14,5 @@ add_executable(STUDYMAP STUDYMAP.c)
 
 set_target_properties(STUDYMAP PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}")
 
-target_link_libraries(questionnaire data_collection load_profile KNN Results)
-target_link_libraries(STUDYMAP data_collection questionnaire load_profile KNN Results m)
+target_link_libraries(questionnaire Registration load_profile KNN Results)
+target_link_libraries(STUDYMAP Registration questionnaire load_profile KNN Results m)

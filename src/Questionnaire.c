@@ -77,7 +77,7 @@ void questions(char* last_question_id){
     //start of the questionaire
     //question 1
     if (strcmp(last_question_id, "q_00") == 0) {
-        question("Practical learning is important to me", "q_01");
+        question("I value hands-on learning experiences", "q_01");
         last_question_id = "q_01";
     }
     //question 2
@@ -87,22 +87,22 @@ void questions(char* last_question_id){
     }
     //question 3
     if (strcmp(last_question_id, "q_02") == 0) {
-        question("I'm interested in working with software", "q_03");
+        question("I have a keen interest in working with software development", "q_03");
         last_question_id = "q_03";
     }
     //question 4
     if (strcmp(last_question_id, "q_03") == 0) {
-        question("I prefer physical attendance over self-study", "q_04");
+        question("I prefer attending classes in person rather than self-study", "q_04");
         last_question_id = "q_04";
     }
     //question 5
     if (strcmp(last_question_id, "q_04") == 0) {
-        question("I enjoy studying and working with math", "q_05");
+        question("I find joy in studying and applying mathematical concepts", "q_05");
         last_question_id = "q_05";
     }
     //question 6
     if (strcmp(last_question_id, "q_05") == 0) {
-        question("Studying in groups is important to me", "q_06");
+        question("Collaborating with others in study groups is important to me", "q_06");
         last_question_id = "q_06";
     }
     //question 7
@@ -112,12 +112,12 @@ void questions(char* last_question_id){
     }
     //question 8
     if (strcmp(last_question_id, "q_07") == 0) {
-        question("I want to gain access to a wide variety of carrier paths", "q_08");
+        question("I aspire to gain access to a diverse range of career paths", "q_08");
         last_question_id = "q_08";
     }
     //question 9
     if (strcmp(last_question_id, "q_08") == 0) {
-        question("I prefer structured timelines where with informative assignments?", "q_09");
+        question("I prefer well-defined assignments and tasks", "q_09");
         last_question_id = "q_09";
     }
 }
@@ -234,19 +234,19 @@ char* get_last_question_id(char *filename) {
 
         // Tokenize the line to extract cells
         char *token = strtok(line, ",");
-        char *lastCell = NULL;
-        char *secondToLastCellTemp = NULL;
+        char *last_cell = NULL;
+        char *second_to_last_cell_temp = NULL;
 
         while (token != NULL) {
-            secondToLastCellTemp = lastCell;
-            lastCell = token;
+            second_to_last_cell_temp = last_cell;
+            last_cell = token;
             token = strtok(NULL, ",");
         }
 
         // Check if the second-to-last cell exists
-        if (secondToLastCellTemp != NULL) {
+        if (second_to_last_cell_temp != NULL) {
             // Allocate memory for the result and copy the content
-            second_last_cell = strdup(secondToLastCellTemp);
+            second_last_cell = strdup(second_to_last_cell_temp);
             break;
         }
     }
@@ -256,15 +256,15 @@ char* get_last_question_id(char *filename) {
 }
 
 
-void get_date(char *formattedDate) {
+void get_date(char *formatted_date) {
     // Get the current time
-    time_t currentTime;
-    time(&currentTime);
+    time_t current_time;
+    time(&current_time);
 
     // Convert the current time to a structure representing local time
-    struct tm *localTime = localtime(&currentTime);
+    struct tm *local_time = localtime(&current_time);
 
     // Format the date as "SS-MM-HH-dd-mm-yyyy" and store it in a string
-    strftime(formattedDate, 40, "%Y-%m-%d-%H-%M-%S", localTime);
+    strftime(formatted_date, 40, "%Y-%m-%d-%H-%M-%S", local_time);
 
 }
