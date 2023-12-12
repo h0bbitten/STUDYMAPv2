@@ -7,7 +7,7 @@
 #include "KNN.h"
 
 
-int file_count = 8;
+int file_count = 14;
 
 
 
@@ -39,7 +39,7 @@ void Display_results() {
     }
 }
 
-void read_results(char* file_path, results result[8]) {
+void read_results(char* file_path, results result[14]) {
     FILE *file = fopen(file_path, "r");
     if (file == NULL) {
         fprintf(stderr, "Failed to open %s.\n", file_path);
@@ -48,7 +48,7 @@ void read_results(char* file_path, results result[8]) {
     char line[MAX_LEN];
     int count = 0;
 
-    while (fgets(line, sizeof(line), file) && count < 8) {
+    while (fgets(line, sizeof(line), file) && count < 14) {
         char *token = strtok(line, DELIMITER);
 
         if (token != NULL) {
@@ -65,7 +65,7 @@ void read_results(char* file_path, results result[8]) {
     fclose(file);
 }
 
-void read_edu_data(char* file_path, educations education[8]) {
+void read_edu_data(char* file_path, educations education[14]) {
     FILE *file = fopen(file_path, "r");
     if (file == NULL) {
         fprintf(stderr, "Failed to open %s.\n", file_path);
@@ -74,7 +74,7 @@ void read_edu_data(char* file_path, educations education[8]) {
     char line[MAX_LEN];
     int count = 0;
 
-    while (fgets(line, sizeof(line), file) && count < 8) {
+    while (fgets(line, sizeof(line), file) && count < 14) {
         char *token = strtok(line, DELIMITER);
 
         if (token != NULL) {
@@ -99,7 +99,7 @@ void read_edu_data(char* file_path, educations education[8]) {
     fclose(file);
 }
 
-void print_results(results result[8], educations education[8], int num_to_print) {
+void print_results(results result[14], educations education[14], int num_to_print) {
 
     double ref_distance = 27.0;
 
