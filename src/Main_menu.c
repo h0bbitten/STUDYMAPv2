@@ -20,7 +20,7 @@
 char* dir_results_path;
 
 void Main_menu(bool* do_questionnaire){
-
+    clear_terminal();
     //Gets the date and time for the start of the questionnaire
     get_date(the_time);
 
@@ -81,7 +81,9 @@ void Main_menu(bool* do_questionnaire){
             snprintf(temp_path, PATH_MAX, "%s/%s.csv", dir_answers_path, answer_files[i].name);
             bool in_progress = check_in_progress(temp_path);
             if (in_progress == true){
-                if (temp_results_file_count == results_file_count) printf("\nTests in progress:\n");
+                if (temp_results_file_count == results_file_count){
+                    printf("\nTests in progress:\n");
+                }
                 temp_results_file_count++;
                 index++;
                 answer_files[i].number = 0;
@@ -157,6 +159,7 @@ void Main_menu(bool* do_questionnaire){
             }
         }
     }
+    clear_terminal();
 }
 
 void scan_file_names(const char *dir_path, file_names *files, int *file_count) {
@@ -165,7 +168,6 @@ void scan_file_names(const char *dir_path, file_names *files, int *file_count) {
     if (dir == NULL) {
         return;
     }
-
     struct dirent *entry;
     struct stat file_stat;
 

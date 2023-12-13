@@ -64,10 +64,10 @@ TODO
 void End_menu(bool *exit_program, bool *log_out){
 
 
-    printf("\n• Exit program (press 'Q')\n"
-           "• Back to main menu (press 'M')\n"
-           "• Logout (press 'L')\n"
-           "• Delete result (press 'D')\n");
+    printf("\n* Exit program (press 'Q')\n"
+                    "* Back to main menu (press 'M')\n"
+                    "* Logout (press 'L')\n"
+                    "* Delete result (press 'D')\n");
 
     printf("\nPlease choose an action above\n>");
 
@@ -101,6 +101,7 @@ void End_menu(bool *exit_program, bool *log_out){
     else if (strcmp(input, "q") == 0 || strcmp(input, "Q") == 0){
         *exit_program = true;
     }
+    clear_terminal();
 }
 
 
