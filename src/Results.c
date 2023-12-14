@@ -149,12 +149,14 @@ void read_edu_data(char* file_path, educations education[14]) {
     fclose(file);
 }
 
+
 void print_results(results result[numFiles], educations education[numFiles], int num_to_print) {
     double ref_distance = 27.0;
 
     for (int i = 0; i < num_to_print; i++) {
         for (int j = 0; j < numFiles; j++) {
-            if (strcmp(result[i].name, education[j].name) == 0 && result[i].value != -1.0) {  // Check if result is not filtered out
+            if (strcmp(result[i].name, education[j].name) == 0) {
+
                 double percentage = ((1 - (result[i].value / ref_distance)) * 100);
 
                 printf("%s (%.2f%% match):\n", result[i].name, percentage);
@@ -277,6 +279,8 @@ void filter_results(results result[numFiles], educations education[numFiles], re
             (*numFilteredResults)++; // Increment count of filtered results
         }
     }
+    // Clear the result array before copying
+    memset(result, 0, *numFilteredResults * sizeof(result[0]));
 
     // Copy filtered results back to the original array
     for (int i = 0; i < *numFilteredResults; i++) {
