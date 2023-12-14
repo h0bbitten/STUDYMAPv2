@@ -66,7 +66,7 @@ void Display_results() {
 
     // Free allocated memory
     for (int i = 0; i < numFiles; i++) {
-        free(result[i].name);
+        //free(result[i].name);
         free(education[i].name);
         free(education[i].link);
         free(education[i].description);
@@ -180,67 +180,72 @@ void print_results(results result[numFiles], educations education[numFiles], int
 
 
 bool isGradeCompatible(const char* requiredGrade, const char* userGrade) {
+    // Check if userGrade is 'MatA' (highest compatibility)
     if (strcmp(userGrade, "MatA") == 0) {
-        return true; // MatA is compatible with anything
-    } else if (strcmp(userGrade, "MatB") == 0) {
-        // MatB is compatible with MatB and not compatible with MatA
+        return true; // If yes, return true as 'MatA' is compatible with any grade
+    }
+        // Check if userGrade is 'MatB'
+    else if (strcmp(userGrade, "MatB") == 0) {
+        // If yes, check if requiredGrade is also 'MatB' as 'MatB' is only compatible with itself
         return strcmp(requiredGrade, "MatB") == 0;
     }
-    return false; // Otherwise, not compatible
+    // If userGrade is neither 'MatA' nor 'MatB', return false indicating incompatibility
+    return false;
 }
 
-
 void filter_results(results result[numFiles], educations education[numFiles], results filteredResults[], int *numFilteredResults) {
-    char user_grade[10];
-    bool grade_found = false;
-    char line[256];
-    char* token;
+    char user_grade[10]; // Array to store the user's grade
+    bool grade_found = false; // Flag to track if user's grade is found
+    char line[256]; // Buffer to read lines from file
+    char* token; // Token for parsing strings
 
+    // Open the file containing user data
     FILE* users_file = fopen("Databases/Users/Users.csv", "r");
     if (users_file == NULL) {
-        fprintf(stderr, "Failed to open Users.csv.\n");
+        fprintf(stderr, "Failed to open Users.csv.\n"); // Error handling if file opening fails
         return;
     }
 
-    printf("Opened Users.csv successfully.\n");
+    printf("Opened Users.csv successfully.\n"); // Indicate successful file opening
 
-    // Find the user's grade
+    // Loop to find the user's grade in the file
     while (fgets(line, sizeof(line), users_file)) {
-        token = strtok(line, ",");
+        token = strtok(line, ","); // Parse username
         if (strcmp(token, current_user.username) == 0) {
             strtok(NULL, ",");  // Skip password
             strtok(NULL, ",");  // Skip CPR
             token = strtok(NULL, ",\n");  // Read grade
             if (token) {
-                strncpy(user_grade, token, sizeof(user_grade) - 1);
-                user_grade[sizeof(user_grade) - 1] = '\0'; // Ensures null-termination
+                strncpy(user_grade, token, sizeof(user_grade) - 1); // Copy the grade to user_grade
+                user_grade[sizeof(user_grade) - 1] = '\0'; // Ensure null-termination
                 grade_found = true;
-                break;
+                break; // Break loop as grade is found
             }
         }
     }
 
-    fclose(users_file);
+    fclose(users_file); // Close the file
 
     if (!grade_found) {
-        fprintf(stderr, "User's grade not found.\n");
+        fprintf(stderr, "User's grade not found.\n"); // Error if grade not found
         return;
     }
 
-    printf("Current user's grade: %s\n", user_grade); // Print the user's grade for debugging
+    printf("Current user's grade: %s\n", user_grade); // Debug print
 
-    *numFilteredResults = 0;  // Reset the count of filtered results
+    *numFilteredResults = 0;  // Initialize the number of filtered results
 
+    // Loop through all files to filter results based on grade compatibility
     for (int i = 0; i < numFiles; i++) {
         char edu_file_path[100];
-        snprintf(edu_file_path, sizeof(edu_file_path), "Databases/Edu_data/%s.csv", education[i].name);
+        snprintf(edu_file_path, sizeof(edu_file_path), "Databases/Edu_data/%s.csv", education[i].name); // Construct file path
         printf("Attempting to open education file: %s\n", edu_file_path);
 
-        FILE* edu_file = fopen(edu_file_path, "r");
+        FILE* edu_file = fopen(edu_file_path, "r"); // Open education file
         if (edu_file == NULL) {
-            perror("Opening education file failed");
+            perror("Opening education file failed"); // Error handling
             fprintf(stderr, "Failed to open %s.\n", edu_file_path);
-            continue;
+            continue; // Skip to next file
         }
         printf("Opened %s successfully.\n", edu_file_path);
 
@@ -248,34 +253,36 @@ void filter_results(results result[numFiles], educations education[numFiles], re
         bool isCompatible = false;
         while (fgets(edu_line, sizeof(edu_line), edu_file)) {
             printf("Reading line from education file: %s", edu_line);
-            char* req_grade = strrchr(edu_line, ',') + 1;
+            char* req_grade = strrchr(edu_line, ',') + 1; // Extract required grade
 
-            // Trim the newline character from the req_grade string if present
+            // Remove newline character from req_grade
             req_grade[strcspn(req_grade, "\r\n")] = 0;
 
             printf("Comparing required grade '%s' with user grade '%s'\n", req_grade, user_grade);
 
+            // Check grade compatibility
             if (req_grade && isGradeCompatible(req_grade, user_grade)) {
                 isCompatible = true;
                 printf("Grade is compatible.\n");
-                break;
+                break; // Break if compatible
             } else {
                 printf("Grade is not compatible.\n");
             }
         }
-        fclose(edu_file);
+        fclose(edu_file); // Close education file
 
         if (isCompatible) {
-            // Copy compatible results to the temporary array
+            // If grade is compatible, add to filtered results
             filteredResults[*numFilteredResults] = result[i];
-            (*numFilteredResults)++;
+            (*numFilteredResults)++; // Increment count of filtered results
         }
     }
 
-    // Copy the filtered results back to the original result array
+    // Copy filtered results back to the original array
     for (int i = 0; i < *numFilteredResults; i++) {
         result[i] = filteredResults[i];
     }
 
     printf("Completed filter_results with %d compatible results.\n", *numFilteredResults);
 }
+
