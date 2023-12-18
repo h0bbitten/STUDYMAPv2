@@ -41,26 +41,6 @@ int main() {
 return 0;
 }
 
-/*
-
-TODO
- Do read_results                                      -       done
- Do read_edu                                          -       done
- Do print_results                                     -       done
- Calculate match compatibility                        -       done
- Change options for new test (not "666")              -       done
- Loop for whole program                               -       done
- Options after displaying result (logout, new test, delete result, exit program, show more results, choose other save)      -       done
- Write description for each education - done
- Add more educations? - done
- Make results dynamic - not static using magic numbers - done
- Make functions same syntax, "example_function", not "ExampleFunction" - Allan
- Fix user experience, what's written out to the user - ALlan
- Clean up code, remove unused stuff, don't break the program - done
- Tilføj de rigtige karakterer inde i CSV filerne - Søren fixer. Den dejlige rødhåret ridder
- Filter_results - Søren cook
- */
-
 void End_menu(bool *exit_program, bool *log_out){
 
 
