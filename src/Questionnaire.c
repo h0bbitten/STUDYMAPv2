@@ -163,8 +163,8 @@ int read_only_integer(bool *valid_question){
 }
 
 void clear_terminal(){
-    printf("\033[2J");  // Clear the screen
-    printf("\033[H");   // Move the cursor to the home position
+    //printf("\033[2J");  // Clear the screen
+    //printf("\033[H");   // Move the cursor to the home position
 }
 
 bool check_in_progress(char *file_path) {
